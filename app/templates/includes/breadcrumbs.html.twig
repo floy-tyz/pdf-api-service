@@ -1,0 +1,41 @@
+<div class="breadcrumbs-wrap">
+    <div class="breadcrumbs">
+    <ul class="breadcrumbs__list list-style" itemscope itemtype="http://schema.org/BreadcrumbList">
+
+        <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <a href="{{ url('home') }}" title="Главная" class="breadcrumbs__link" itemprop="item">
+                <span itemprop="name">Главная</span>
+                <meta itemprop="position" content="1">
+            </a>
+        </li>
+
+        {% if breadcrumbs is defined %}
+
+            {% for breadcrumb in breadcrumbs %}
+
+                {% if loop.last %}
+
+                    <li class="breadcrumbs__item">
+                        <span class="breadcrumbs__link_last">
+                            <span>{{ breadcrumb.name }}</span>
+                        </span>
+                    </li>
+
+                {% else %}
+
+                    <li class="breadcrumbs__item" itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a href="{{ breadcrumb.url }}" title="{{ breadcrumb.name }}" itemprop="item" class="breadcrumbs__link">
+                            <span itemprop="name">{{ breadcrumb.name }}</span>
+                            <meta itemprop="position" content="{{ loop.index }}">
+                        </a>
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+        {% endif %}
+
+    </ul>
+</div>
+</div>

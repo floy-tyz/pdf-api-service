@@ -59,8 +59,8 @@ services:
             - ./bash/.bashrc:/home/${USER}/.bashrc
             - ./bash/init.sh:/init.sh
             ###> COMPOSER VOLUMES ###
-            - ${COMPOSER_CONFIG_PATH:-./composer/.config}:/.composer
-            - ${COMPOSER_CACHE_PATH:-./composer/.cache}:/.cache/composer
+            - ${COMPOSER_CONFIG_PATH:-./composer/.config}:/home/${USER}/.composer
+            - ${COMPOSER_CACHE_PATH:-./composer/.cache}:/home/${USER}/.cache/composer
             ###> YARN VOLUMES ###
             - ${YARNRC_PATH:-./yarn/.yarnrc}:/home/${USER}/.yarnrc
             - ${YARN_CACHE_PATH:-./yarn/.config}:/home/${USER}/.cache
@@ -79,7 +79,6 @@ services:
         networks:
             - sql
             - backend
-            - rabbitmq
 
     rabbitmq:
         build:
@@ -97,7 +96,18 @@ services:
             - "5672:5672"
             - "15672:15672"
         networks:
-            - rabbitmq
+            - backend
+
+    amqproxy:
+        image: cloudamqp/amqproxy
+        container_name: ${CONTAINER_NAME:-unnamed}-rabbitmq-proxy
+        environment:
+            - AMQP_URL=amqp://rabbitmq:5672
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        networks:
+            - backend
 
     pdf-converter-workers:
         build:
@@ -141,7 +151,7 @@ services:
         ports:
             - "9001:9001"
         networks:
-            - rabbitmq
+            - backend
 
 networks:
     backend:
@@ -155,7 +165,3 @@ networks:
     sql:
         name: ${SQL_NETWORK_NAME:-docker_engine_sql}
         external: true
-
-    rabbitmq:
-        driver: bridge
-        name: ${CONTAINER_NAME:-unnamed}_rabbitmq_network
