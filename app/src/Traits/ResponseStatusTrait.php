@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace App\Traits;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 

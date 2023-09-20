@@ -2,11 +2,11 @@
 
 namespace App\EventListener;
 
-use App\Exception\ResponseStatusTrait;
+use App\Exception\BusinessException;
+use App\Traits\ResponseStatusTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
-use App\Exception\BusinessException;
 
 class ExceptionListener
 {
