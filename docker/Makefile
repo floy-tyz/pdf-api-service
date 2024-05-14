@@ -26,7 +26,7 @@ start-quick: build-quick up db perm
 restart: down up                             ## Перезапуск контейнера
 
 down:
-	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) --env-file .env.local -p $(CONTAINER_NAME) down
 
 down-volume:
 	$(DOCKER_COMPOSE) down -v
