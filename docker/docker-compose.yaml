@@ -22,9 +22,9 @@ services:
             ###> TIMEZONE VOLUMES
             - /etc/localtime:/etc/localtime:ro
             ###> PROJECT VOLUME ###
-            - ${PROJECT_PATH:-../app}:/var/www/app
+            - ${PROJECT_PATH:-../}:/var/www/app
         networks:
-            - frontend
+            - reverse-proxy
             - backend
 
     app:
@@ -39,12 +39,6 @@ services:
         working_dir: /var/www/app
         stdin_open: true
         tty: true
-        depends_on:
-            - rabbitmq
-        entrypoint:
-            - /bin/bash
-            - /init.sh
-            - ${APP_ENV:-dev}
         environment:
             ### PHP ENV ###
             - PHP_OPCACHE_VALIDATE_TIMESTAMPS=1
@@ -73,95 +67,37 @@ services:
             ###> TIMEZONE VOLUMES
             - /etc/localtime:/etc/localtime:ro
             ###> PHP INI VOLUME
-            - ./php/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
+            - ./app/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
             ###> PROJECT VOLUME ###
-            - ${PROJECT_PATH:-../app}:/var/www/app
-        networks:
-            - sql
-            - backend
-
-    rabbitmq:
-        build:
-            context: ./rabbitmq
-        container_name: ${CONTAINER_NAME:-unnamed}-rabbitmq
-        environment:
-            - RABBITMQ_DEFAULT_USER=guest
-            - RABBITMQ_DEFAULT_PASS=guest
-        healthcheck:
-            test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
-            interval: 5s
-            timeout: 10s
-            retries: 5
-        ports:
-            - "5672:5672"
-            - "15672:15672"
+            - ${PROJECT_PATH:-../}:/var/www/app
         networks:
             - backend
 
-    amqproxy:
-        image: cloudamqp/amqproxy
-        container_name: ${CONTAINER_NAME:-unnamed}-rabbitmq-proxy
-        environment:
-            - AMQP_URL=amqp://rabbitmq:5672
-        depends_on:
-            rabbitmq:
-                condition: service_healthy
-        networks:
-            - backend
-
-    pdf-converter-workers:
-        build:
-            context: ./pdf-converter-worker
-            args:
-                PHP: ${PHP_VERSION}
-                NAME: ${CONTAINER_NAME:-unnamed}
-        restart: unless-stopped
-        container_name: ${CONTAINER_NAME:-unnamed}-pdf-converter-workers
-        working_dir: /var/www/app
-        stdin_open: true
-        tty: true
-        depends_on:
-            rabbitmq:
-                condition: service_healthy
-        environment:
-            ### PHP ENV ###
-            - PHP_OPCACHE_VALIDATE_TIMESTAMPS=1
-            - VIRTUAL_PROTO=fastcgi
-            ###> BASH COLORS ###
-            - TERM=xterm-256color
-            - PS1=${PS1}
+    postgres:
+        container_name: ${CONTAINER_NAME:-unnamed}-postgres
+        image: postgres:16-alpine
+        restart: always
         volumes:
-            ###> BASH VOLUMES ###
-            - ./bash/.bash_aliases:/home/${USER}/.bash_aliases
-            - ./bash/.bashrc:/home/${USER}/.bashrc
-            - ./bash/init.sh:/init.sh
-            ###> DOCKER USER VOLUMES
-            - /home/${USER}/.ssh:/home/${USER}/.ssh:rw
-            - /etc/group:/etc/group:ro
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/shadow:/etc/shadow:ro
-            ###> TIMEZONE VOLUMES
-            - /etc/localtime:/etc/localtime:ro
-            ###> PHP INI VOLUME
-            - ./php/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
-            ###> PROJECT VOLUME ###
-            - ../pdf-converter-worker:/var/www/app
-            ###> SUPERVISOR VOLUMES ###
-            - ./pdf-converter-worker/supervisord.conf:/etc/supervisord.conf
+            - ./postgres/data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
         ports:
-            - "9001:9001"
+            - "5432:5432"
         networks:
             - backend
+            - frontend_postgres_db
 
 networks:
+    reverse-proxy:
+        name: ${PROXY_NETWORK_NAME:-docker_engine_reverse_proxy}
+        external: true
+
     backend:
         driver: bridge
         name: ${CONTAINER_NAME:-unnamed}_backend_network
 
-    frontend:
-        name: ${PROXY_NETWORK_NAME:-docker_engine_proxy}
-        external: true
-
-    sql:
-        name: ${SQL_NETWORK_NAME:-docker_engine_sql}
-        external: true
+    frontend_postgres_db:
+        driver: bridge
+        name: ${CONTAINER_NAME:-unnamed}_postgres_db

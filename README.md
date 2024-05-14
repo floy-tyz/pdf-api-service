@@ -1,1 +1,1 @@
-# rabbitmq pdf converter
+# pdf converter

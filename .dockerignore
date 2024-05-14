@@ -1,0 +1,6 @@
+# .dockerignore
+
+/docker/postgres/data
+/vendor
+/var
+/node_modules

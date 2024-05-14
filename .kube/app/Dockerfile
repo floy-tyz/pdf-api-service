@@ -25,18 +25,16 @@ ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl" \
 RUN set -xe \
     ###> BASE UTILS ###
     && apk add --update --no-cache \
-        git \
         openrc \
         bash \
         vim \
-        yarn \
         icu \
+        yarn \
     ###> LOCALE EXTENSION ### \
         musl-locales \
         musl-locales-lang \
     ###> DEV EXTENSION ###
         make \
-        $PHPIZE_DEPS \
         icu-dev \
         postgresql-dev
 
@@ -59,13 +57,18 @@ RUN \
     ###> CACHE CLEAR ### \
     && apk del --no-cache \
         make \
-        $PHPIZE_DEPS \
         icu-dev \
     \
     && { find /usr/local/lib -type f -print0 | xargs -0r strip --strip-all -p 2>/dev/null || true; } \
     && rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
     ###< CACHE CLEAR ###
 
+WORKDIR /var/www/html
+
+COPY . /var/www/html
+
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+
+RUN composer i && yarn && yarn build
 
 CMD ["php-fpm"]

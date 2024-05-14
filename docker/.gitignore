@@ -1,6 +1,9 @@
 yarn/berry/cache
+/yarn/.config/yarn
 
 .env.local
 docker-compose.prod.local.yaml
+
+/postgres/data
 
 /.idea/
