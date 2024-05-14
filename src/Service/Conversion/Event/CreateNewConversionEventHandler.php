@@ -7,11 +7,13 @@ use App\Bus\EventHandlerInterface;
 use App\Entity\Conversion;
 use App\Service\Conversion\Interface\ConversionRepositoryInterface;
 use App\Service\File\Event\SaveFileEntityFromFilePathEvent;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 readonly class CreateNewConversionEventHandler implements EventHandlerInterface
 {
     public function __construct(
         private EventBusInterface $eventBus,
+        private MessageBusInterface $messageBus,
         private ConversionRepositoryInterface $conversionRepository,
     ) {
     }
@@ -35,7 +37,7 @@ readonly class CreateNewConversionEventHandler implements EventHandlerInterface
 
         $this->conversionRepository->save($conversion);
 
-        $this->eventBus->publish(new SendFilesToConvertServiceEvent($conversion));
+        $this->messageBus->dispatch(new SendFilesToConvertServiceEvent($conversion->getId()));
 
         return $conversion->getUuid();
     }

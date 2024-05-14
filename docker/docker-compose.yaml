@@ -88,6 +88,24 @@ services:
         networks:
             - backend
             - frontend_postgres_db
+    
+    rabbitmq:
+        build:
+            context: ./rabbitmq
+        container_name: ${CONTAINER_NAME:-unnamed}-rabbitmq
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+            interval: 5s
+            timeout: 10s
+            retries: 5
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        networks:
+            - backend
 
 networks:
     reverse-proxy:

@@ -13,7 +13,18 @@ framework:
                     allow_no_senders: true
                 middleware:
                     - validation
-
+        transports:
+            async_transport:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 2000
+                    multiplier: 3
+                    max_delay: 0
+        
+        routing:
+            App\Service\Conversion\Event\SendFilesToConvertServiceEvent: async_transport
+            
 when@test:
     framework:
         messenger:

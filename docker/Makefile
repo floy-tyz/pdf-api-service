@@ -35,7 +35,7 @@ stop:                                        ## Остановить
 	$(DOCKER_COMPOSE) stop
 
 up:
-	$(DOCKER_COMPOSE) --env-file .env.local -f docker-compose.yaml -f docker-compose.$(APP_ENV).yaml -p $(CONTAINER_NAME) up --remove-orphans
+	$(DOCKER_COMPOSE) --env-file .env.local -f docker-compose.yaml -p $(CONTAINER_NAME) up --remove-orphans
 
 remove:	                                     ## Удалить контейнеры докеров
 	$(DOCKER_COMPOSE) kill
@@ -75,7 +75,7 @@ composer:                                    ## Выполнить composer в �
 	@${COMPOSER} $(c)
 
 app-shell:                                   ## Открыть shell приложения (app)
-	@$(EXEC) bash
+	docker exec -it pdf-frontend-app bash
 
 clear: perm                                  ## Очистить кеш
 	-$(EXEC) rm -rf var/cache/*

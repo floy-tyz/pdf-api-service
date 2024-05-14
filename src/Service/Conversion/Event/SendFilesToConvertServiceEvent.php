@@ -3,16 +3,17 @@
 namespace App\Service\Conversion\Event;
 
 use App\Bus\EventInterface;
-use App\Entity\Conversion;
 
 readonly class SendFilesToConvertServiceEvent implements EventInterface
 {
-    public function __construct(private Conversion $conversion)
-    {
+    public function __construct(
+        private int $conversionId
+    ) {
     }
 
-    public function getConversion(): Conversion
+
+    public function getConversionId(): int
     {
-        return $this->conversion;
+        return $this->conversionId;
     }
 }

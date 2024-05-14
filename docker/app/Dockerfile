@@ -25,7 +25,6 @@ ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl" \
 RUN set -xe \
     ###> BASE UTILS ###
     && apk add --update --no-cache \
-        git \
         openrc \
         bash \
         vim \
@@ -34,37 +33,46 @@ RUN set -xe \
     ###> LOCALE EXTENSION ### \
         musl-locales \
         musl-locales-lang \
-    ###> DEV EXTENSION ###
-        make \
+    ###> DEV EXTENSION ### \
         $PHPIZE_DEPS \
+        make \
+        autoconf \
+        g++ \
         icu-dev \
-        postgresql-dev
+        postgresql-dev \
+        rabbitmq-c-dev \
+    ###< BASE UTILS ###
 
-RUN \
-    ###> CONFIGURE PHP EXTENSIONS
-        docker-php-ext-configure intl \
-        && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    ###< CONFIGURE PHP EXTENSIONS
-    \
-    ###> INSTALL PHP EXTENSIONS
-        && docker-php-ext-install -j$(nproc)  \
-            intl \
-            pdo \
-            pgsql \
-            pdo_pgsql \
-            opcache \
-            exif \
-    ###< INSTALL PHP EXTENSIONS \
-    \
-    ###> CACHE CLEAR ### \
+    ###> CONFIGURE PHP EXTENSIONS ###
+    && docker-php-ext-configure intl \
+    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
+    ###< CONFIGURE PHP EXTENSIONS ###
+
+    ###> INSTALL PHP EXTENSIONS ###
+    && docker-php-ext-install -j$(nproc) \
+        intl \
+        pdo \
+        pgsql \
+        pdo_pgsql \
+        opcache \
+        exif \
+    ###< INSTALL PHP EXTENSIONS ###
+
+    ###> INSTALL PECL AMQP ###
+    && pecl install amqp \
+    && docker-php-ext-enable amqp \
+    ###< INSTALL PECL AMQP ###
+
+    ###> CLEAN UP ###
     && apk del --no-cache \
         make \
-        $PHPIZE_DEPS \
+        autoconf \
+        g++ \
         icu-dev \
-    \
-    && { find /usr/local/lib -type f -print0 | xargs -0r strip --strip-all -p 2>/dev/null || true; } \
-    && rm -rf /tmp/* /usr/local/lib/php/doc/* /var/cache/apk/*
-    ###< CACHE CLEAR ###
+    && rm -rf /tmp/* \
+    && find /usr/local/lib -type f -print0 | xargs -0 strip --strip-all 2>/dev/null || true \
+    && rm -rf /usr/local/lib/php/doc/* /var/cache/apk/*
+    ###< CLEAN UP ###
 
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
 
