@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
 use App\Exception\BusinessException;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ApiController extends AbstractController
+class FileApiController extends AbstractController
 {
     use ResponseStatusTrait;
 
@@ -20,7 +20,7 @@ class ApiController extends AbstractController
     ) {
     }
 
-    #[Route('/api/upload', name: 'upload.file', methods: ["POST"])]
+    #[Route('/api/v1/upload/files', name: 'api.upload.files', methods: ["POST"])]
     public function uploadFile(Request $request): Response
     {
         $files = $request->files->all();

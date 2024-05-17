@@ -66,7 +66,10 @@ class FileManager implements FileManagerInterface
 
         Dir::createDirectoryIfNotExist(dirname($absoluteMoveFilePath));
 
-        (new Filesystem())->rename($filepath, $absoluteMoveFilePath);
+        $filesystem = new Filesystem();
+
+        $filesystem->rename($filepath, $absoluteMoveFilePath);
+        $filesystem->chmod($absoluteMoveFilePath, 0644);
 
         return $relativeFilePath;
     }

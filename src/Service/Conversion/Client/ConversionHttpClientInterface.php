@@ -51,8 +51,8 @@ readonly class ConversionHttpClientInterface implements ConversionClientInterfac
         $formData = new FormDataPart($formFields);
 
         $content = $this->conversionClient->request(
-            'GET',
-            'api/v1/conversion/convert',
+            'POST',
+            'api/v1/convert',
             [
                 'headers' => $formData->getPreparedHeaders()->toArray(),
                 'body' => $formData->bodyToIterable(),

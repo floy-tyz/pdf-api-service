@@ -35,6 +35,7 @@ RUN set -xe \
         musl-locales-lang \
     ###> DEV EXTENSION ### \
         $PHPIZE_DEPS \
+        linux-headers \
         make \
         autoconf \
         g++ \
@@ -63,8 +64,13 @@ RUN set -xe \
     && docker-php-ext-enable amqp \
     ###< INSTALL PECL AMQP ###
 
+    ###> INSTALL PECL XDEBUG ###
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    ###< INSTALL PECL XDEBUG ###
+
     ###> CLEAN UP ###
-    && apk del --no-cache \
+    && apk del --no-cache --purge \
         make \
         autoconf \
         g++ \

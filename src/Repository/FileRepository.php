@@ -34,4 +34,16 @@ class FileRepository extends AbstractRepository implements FileRepositoryInterfa
 
         return $qb->getQuery()->getResult();
     }
+
+    public function getConversionActualFiles(int $conversionId): array
+    {
+        $qb = $this->createQueryBuilder($this->alias);
+
+        $qb->andWhere('file.isUsed = true');
+        $qb->andWhere('file.conversion = :conversion_id');
+
+        $qb->setParameter('conversion_id', $conversionId);
+
+        return $qb->getQuery()->getResult();
+    }
 }

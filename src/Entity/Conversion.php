@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ConversionRepository;
 use App\Repository\EntityInterface;
+use App\Service\Conversion\Enum\ConversionStatusEnum;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,6 +29,13 @@ class Conversion implements EntityInterface
 
     #[ORM\Column(type: "string")]
     protected string $extension;
+
+    // todo change db to string enum
+    #[ORM\Column(type: "string")]
+    protected string $status = ConversionStatusEnum::STATUS_CREATED->value;
+
+    #[ORM\Column(type: "datetimetz", nullable: true)]
+    protected ?DateTime $dateConverted = null;
 
     #[ORM\OneToMany(mappedBy: 'conversion', targetEntity: File::class, cascade: ["persist", "remove"])]
     private Collection $files;
@@ -90,5 +99,25 @@ class Conversion implements EntityInterface
     public function setExtension(string $extension): void
     {
         $this->extension = $extension;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
+    }
+
+    public function getDateConverted(): ?DateTime
+    {
+        return $this->dateConverted;
+    }
+
+    public function setDateConverted(?DateTime $dateConverted): void
+    {
+        $this->dateConverted = $dateConverted;
     }
 }

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% set head_title = 'Главная' %}
+
+{% set head_description = '' %}
+
+{% block content %}
+
+    <div id="files">
+
+        {% for file in files %}
+            <a href="{{ file.href }}">{{ file.name }}</a>
+        {% endfor %}    
+        
+    </div>
+
+{% endblock %}

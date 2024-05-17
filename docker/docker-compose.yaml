@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-
+    
     nginx:
         build:
             context: ./nginx
@@ -17,8 +17,6 @@ services:
             - ./nginx/conf.d/:/etc/nginx/conf.d
             - ./nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./nginx/sites-enabled/app.conf:/etc/nginx/sites-enabled/${CONTAINER_NAME:-unnamed}.conf
-            - ./nginx/logs/access.log:/var/log/nginx/access.log
-            - ./nginx/logs/error.log:/var/log/nginx/error.log
             ###> TIMEZONE VOLUMES
             - /etc/localtime:/etc/localtime:ro
             ###> PROJECT VOLUME ###
@@ -26,7 +24,7 @@ services:
         networks:
             - reverse-proxy
             - backend
-
+    
     app:
         build:
             context: ./app
@@ -46,6 +44,7 @@ services:
             ###> BASH COLORS ###
             - TERM=xterm-256color
             - PS1=${PS1}
+            - PHP_IDE_CONFIG=${XDEBUG_SERVER_NAME}
         volumes:
             ###> BASH VOLUMES ###
             - ./bash/.bash_aliases:/home/${USER}/.bash_aliases
@@ -70,9 +69,14 @@ services:
             - ./app/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
             ###> PROJECT VOLUME ###
             - ${PROJECT_PATH:-../}:/var/www/app
+            ###> XDEBUG ###
+            - ./app/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         networks:
             - backend
-
+            - rabbitmq
+        extra_hosts:
+            - converter.pdf.local:${DOCKER_IP}
+    
     postgres:
         container_name: ${CONTAINER_NAME:-unnamed}-postgres
         image: postgres:16-alpine
@@ -89,33 +93,33 @@ services:
             - backend
             - frontend_postgres_db
     
-    rabbitmq:
-        build:
-            context: ./rabbitmq
-        container_name: ${CONTAINER_NAME:-unnamed}-rabbitmq
+    adminer:
+        image: adminer:latest
+        container_name: ${CONTAINER_NAME:-unnamed}-adminer
+        restart: unless-stopped
         environment:
-            - RABBITMQ_DEFAULT_USER=guest
-            - RABBITMQ_DEFAULT_PASS=guest
-        healthcheck:
-            test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
-            interval: 5s
-            timeout: 10s
-            retries: 5
+            ADMINER_DEFAULT_SERVER: postgres
+            VIRTUAL_HOST: adminer.${DOMAIN}
         ports:
-            - "5672:5672"
-            - "15672:15672"
+            - "8080:8080"
         networks:
-            - backend
+            - reverse-proxy
+            - frontend_postgres_db
+
 
 networks:
     reverse-proxy:
         name: ${PROXY_NETWORK_NAME:-docker_engine_reverse_proxy}
         external: true
-
+    
+    rabbitmq:
+        name: ${RABBITMQ_NETWORK_NAME:-pdf_frontend_rabbitmq}
+        external: true
+    
     backend:
         driver: bridge
         name: ${CONTAINER_NAME:-unnamed}_backend_network
-
+    
     frontend_postgres_db:
         driver: bridge
         name: ${CONTAINER_NAME:-unnamed}_postgres_db

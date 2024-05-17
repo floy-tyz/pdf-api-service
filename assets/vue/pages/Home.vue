@@ -85,7 +85,7 @@ export default {
             let response = null;
 
             try {
-                response = await axios.post('/api/upload', formData, {
+                response = await axios.post('/api/v1/upload/files', formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 })
             } catch (e) {
@@ -98,8 +98,7 @@ export default {
                 return;
             }
 
-            alert('Успешно');
-            location.reload();
+            this.$router.push({name: 'conversion.page', params: {uuid: response.data.uuid}})
         }
     },
 };
