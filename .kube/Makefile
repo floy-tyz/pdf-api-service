@@ -1,7 +1,7 @@
 REPOSITORY_NAME=floytyz
 
-APP_IMAGE_NAME=pdf-frontend-app
-NGINX_IMAGE_NAME=pdf-frontend-nginx
+APP_IMAGE_NAME=pdf-api-app
+NGINX_IMAGE_NAME=pdf-api-nginx
 
 PHP_IMAGE=php:8.3-fpm-alpine
 
