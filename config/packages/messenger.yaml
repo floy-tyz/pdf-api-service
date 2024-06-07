@@ -24,6 +24,7 @@ framework:
         
         routing:
             App\Service\Conversion\Event\SendFilesToConvertServiceEvent: async_transport
+            App\Service\Conversion\Event\SendFilesToCombineServiceEvent: async_transport
             
 when@test:
     framework:
