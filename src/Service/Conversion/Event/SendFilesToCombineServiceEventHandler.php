@@ -9,7 +9,7 @@ use App\Service\Conversion\Client\ConversionClientInterface;
 use App\Service\Conversion\Interface\ConversionRepositoryInterface;
 use Symfony\Component\Messenger\Exception\UnrecoverableMessageHandlingException;
 
-readonly class SendFilesToConvertServiceEventHandler implements EventHandlerInterface
+readonly class SendFilesToCombineServiceEventHandler implements EventHandlerInterface
 {
     public function __construct(
         private ConversionRepositoryInterface $conversionRepository,
@@ -17,7 +17,7 @@ readonly class SendFilesToConvertServiceEventHandler implements EventHandlerInte
     ) {
     }
 
-    public function __invoke(SendFilesToConvertServiceEvent $event): void
+    public function __invoke(SendFilesToCombineServiceEvent $event): void
     {
         $conversion = $this->conversionRepository->find($event->getConversionId());
 
@@ -25,7 +25,7 @@ readonly class SendFilesToConvertServiceEventHandler implements EventHandlerInte
             throw new UnrecoverableMessageHandlingException();
         }
 
-        $this->conversionClient->requestUploadConvertFiles(
+        $this->conversionClient->requestUploadCombineFiles(
             $conversion->getUuid(),
             $conversion->getExtension(),
             $conversion->getFiles()->toArray()

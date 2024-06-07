@@ -9,7 +9,7 @@ use App\Service\Conversion\Interface\ConversionRepositoryInterface;
 use App\Service\File\Event\SaveFileEntityFromFilePathEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-readonly class CreateNewConversionEventHandler implements EventHandlerInterface
+readonly class CreateNewConvertEventHandler implements EventHandlerInterface
 {
     public function __construct(
         private EventBusInterface $eventBus,
@@ -18,11 +18,11 @@ readonly class CreateNewConversionEventHandler implements EventHandlerInterface
     ) {
     }
 
-    public function __invoke(CreateNewConversionEvent $event): string
+    public function __invoke(CreateNewConvertEvent $event): string
     {
         $conversion = new Conversion();
 
-        $conversion->setExtension($event->getConvertExtension());
+        $conversion->setExtension($event->getExtension());
 
         foreach ($event->getFiles() as $file) {
             $conversion->addFile(

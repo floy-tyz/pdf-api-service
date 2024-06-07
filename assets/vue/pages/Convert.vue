@@ -24,7 +24,7 @@
                 <label class="group center">
                     <span class="label-span">Конвертировать в:</span>
                     <select class="select-input" v-model="convert_type">
-                        <option :value="type" v-for="type in convert_types">{{ type }}</option>
+                        <option :value="type" v-for="type in available_types">{{ type }}</option>
                     </select>
                 </label>
 
@@ -46,9 +46,7 @@ export default {
         return {
             files: [],
             convert_type: null,
-            convert_types: [
-                'pdf'
-            ]
+            available_types: []
         };
     },
 
@@ -85,21 +83,37 @@ export default {
             let response = null;
 
             try {
-                response = await axios.post('/api/v1/upload/files', formData, {
+                response = await axios.post('/api/v1/convert/files', formData, {
                     headers: { "Content-Type": "multipart/form-data" }
                 })
             } catch (e) {
-                alert(e.message)
                 return;
             }
 
             if (!response.data?.success) {
-                alert(response.data?.message)
+                alert(response.data?.errors.join(', '))
                 return;
             }
 
             this.$router.push({name: 'conversion.page', params: {uuid: response.data.uuid}})
+        },
+
+        async getConvertTypes() {
+            let response = null;
+
+            try {
+                response = await axios.get('/api/v1/conversion/types')
+            } catch (e) {
+                alert(e.data.errors)
+                return;
+            }
+
+            this.available_types = response.data.types.convert
         }
+    },
+
+    mounted() {
+        this.getConvertTypes()
     },
 };
 </script>

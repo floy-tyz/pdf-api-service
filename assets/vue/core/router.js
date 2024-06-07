@@ -1,12 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-import Home from '../pages/Home.vue'
+import Convert from '../pages/Convert.vue'
+import Combine from '../pages/Combine.vue'
 import Conversion from '../pages/Conversion.vue'
-const About = { template: '<div>About</div>' }
 
 const routes = [
-    { path: '/', component: Home, name: 'home.page' },
     { path: '/conversion/:uuid', component: Conversion, name: 'conversion.page' },
+    { path: '/combine', component: Combine, name: 'combine.page' },
+    { path: '/convert', component: Convert, name: 'convert.page' },
 ]
 
 export default createRouter({

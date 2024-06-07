@@ -12,7 +12,7 @@ class ExceptionListener
 {
     use ResponseStatusTrait;
 
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
 
@@ -30,7 +30,7 @@ class ExceptionListener
 
             $event->allowCustomResponseCode();
 
-            $response = $this->failed([ 'errors' => $exception->getErrors() ]);
+            $response = $this->failed(['errors' => [...[$exception->getMessage()], ...$exception->getErrors()]]);
 
             $event->setResponse($response);
 

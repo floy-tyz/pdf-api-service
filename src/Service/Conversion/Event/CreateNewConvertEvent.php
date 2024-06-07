@@ -5,10 +5,10 @@ namespace App\Service\Conversion\Event;
 use App\Bus\EventInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-readonly class CreateNewConversionEvent implements EventInterface
+readonly class CreateNewConvertEvent implements EventInterface
 {
     public function __construct(
-        private string $convertExtension,
+        private string $extension,
         private array $files
     ) {
     }
@@ -21,8 +21,8 @@ readonly class CreateNewConversionEvent implements EventInterface
         return $this->files;
     }
 
-    public function getConvertExtension(): string
+    public function getExtension(): string
     {
-        return $this->convertExtension;
+        return $this->extension;
     }
 }

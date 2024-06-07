@@ -4,5 +4,7 @@ namespace App\Service\Conversion\Client;
 
 interface ConversionClientInterface
 {
-    public function requestConvertFiles(string $conversionUuid, string $convertExtension, array $conversionFiles);
+    public function requestUploadConvertFiles(string $conversionUuid, string $extension, array $convertFiles);
+
+    public function requestUploadCombineFiles(string $conversionUuid, string $extension, array $combineFiles);
 }

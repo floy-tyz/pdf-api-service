@@ -48,7 +48,7 @@ services:
         volumes:
             ###> BASH VOLUMES ###
             - ./bash/.bash_aliases:/home/${USER}/.bash_aliases
-            - ./bash/.bash_history:/root/.bash_history
+            - ./bash/.bash_history:/${USER}/.bash_history
             - ./bash/.bashrc:/home/${USER}/.bashrc
             - ./bash/init.sh:/init.sh
             ###> COMPOSER VOLUMES ###
@@ -58,17 +58,13 @@ services:
             - ${YARNRC_PATH:-./yarn/.yarnrc}:/home/${USER}/.yarnrc
             - ${YARN_CACHE_PATH:-./yarn/.config}:/home/${USER}/.cache
             - ${YARN_PATH:-./yarn}:/home/${USER}/.yarn
-            ###> DOCKER USER VOLUMES
-            - /home/${USER}/.ssh:/home/${USER}/.ssh:rw
-            - /etc/group:/etc/group:ro
-            - /etc/passwd:/etc/passwd:ro
-            - /etc/shadow:/etc/shadow:ro
             ###> TIMEZONE VOLUMES
             - /etc/localtime:/etc/localtime:ro
             ###> PHP INI VOLUME
             - ./app/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
             ###> PROJECT VOLUME ###
             - ${PROJECT_PATH:-../}:/var/www/app
+            - ./app/supervisord.conf:/etc/supervisord.conf
             ###> XDEBUG ###
             - ./app/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
         networks:

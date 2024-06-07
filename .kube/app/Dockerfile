@@ -41,6 +41,7 @@ RUN set -xe \
         icu-dev \
         postgresql-dev \
         rabbitmq-c-dev \
+        supervisor \
     ###< BASE UTILS ###
 
     ###> CONFIGURE PHP EXTENSIONS
@@ -82,4 +83,4 @@ COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
 
 RUN composer i && yarn && yarn build
 
-CMD ["php-fpm"]
+CMD ["supervisord"]

@@ -26,8 +26,8 @@ readonly class ConversionHttpClientInterface implements ConversionClientInterfac
 
     /**
      * @param string $conversionUuid
-     * @param string $convertExtension
-     * @param array<File> $conversionFiles
+     * @param string $extension
+     * @param array<File> $convertFiles
      * @return mixed
      * @throws JsonException
      * @throws TransportExceptionInterface
@@ -35,13 +35,14 @@ readonly class ConversionHttpClientInterface implements ConversionClientInterfac
      * @throws RedirectionExceptionInterface
      * @throws ServerExceptionInterface
      */
-    public function requestConvertFiles(string $conversionUuid, string $convertExtension, array $conversionFiles): mixed
+    public function requestUploadConvertFiles(string $conversionUuid, string $extension, array $convertFiles): mixed
     {
         $formFields = [
             'uuid' => $conversionUuid,
+            'output_extension' => $extension
         ];
 
-        foreach ($conversionFiles as $file) {
+        foreach ($convertFiles as $file) {
             $formFields[$file->getUuidFileName()] = DataPart::fromPath(
                 $this->parameterBag->get('kernel.project_dir')
                 . DIRECTORY_SEPARATOR
@@ -53,6 +54,42 @@ readonly class ConversionHttpClientInterface implements ConversionClientInterfac
         $content = $this->conversionClient->request(
             'POST',
             'api/v1/convert',
+            [
+                'headers' => $formData->getPreparedHeaders()->toArray(),
+                'body' => $formData->bodyToIterable(),
+            ]
+        );
+
+        return json_decode($content->getContent(false), true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     * @throws JsonException
+     */
+    public function requestUploadCombineFiles(string $conversionUuid, string $extension, array $combineFiles): mixed
+    {
+        $formFields = [
+            'uuid' => $conversionUuid,
+            'output_extension' => $extension
+        ];
+
+        foreach ($combineFiles as $file) {
+            $formFields[] = DataPart::fromPath(
+                $this->parameterBag->get('kernel.project_dir')
+                . DIRECTORY_SEPARATOR
+                . $file->getPath()
+            );
+        }
+
+        $formData = new FormDataPart($formFields);
+
+        $content = $this->conversionClient->request(
+            'POST',
+            'api/v1/combine',
             [
                 'headers' => $formData->getPreparedHeaders()->toArray(),
                 'body' => $formData->bodyToIterable(),

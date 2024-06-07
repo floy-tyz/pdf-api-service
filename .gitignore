@@ -16,4 +16,6 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
-/public/storage
+/.idea/
+/supervisord.log
+supervisord.pid
