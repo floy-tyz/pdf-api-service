@@ -11,7 +11,9 @@ use App\Service\File\Interface\FileRepositoryInterface;
 use App\Traits\ResponseStatusTrait;
 use Doctrine\ORM\EntityNotFoundException;
 use Exception;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -23,6 +25,7 @@ class ProcessApiController extends AbstractController
     public function __construct(
         private readonly EventBusInterface $eventBus,
         private readonly FileRepositoryInterface $fileRepository,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -40,6 +43,12 @@ class ProcessApiController extends AbstractController
         if ($process->getStatus() === ProcessStatusEnum::STATUS_PROCESSED->value) {
             return $this->success();
         }
+
+        /** @var array<UploadedFile> $files */
+        $files = $request->files->all();
+
+        $this->logger->critical("MESSAGES COUNT " . count($files));
+        $this->logger->critical("MESSAGES DESTINATION " . (array_pop($files))->getPath());
 
         $this->eventBus->publish(new SaveProcessedFilesEvent($process, $request->files->all()));
 
