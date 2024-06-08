@@ -46,7 +46,7 @@ class File implements EntityInterface
 
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: false)]
-    private ?Conversion $conversion = null;
+    private ?Process $process = null;
 
     public function __construct()
     {
@@ -162,14 +162,14 @@ class File implements EntityInterface
         return $this->isUsed;
     }
 
-    public function getConversion(): ?Conversion
+    public function getProcess(): ?Process
     {
-        return $this->conversion;
+        return $this->process;
     }
 
-    public function setConversion(?Conversion $conversion): static
+    public function setProcess(?Process $process): static
     {
-        $this->conversion = $conversion;
+        $this->process = $process;
 
         return $this;
     }

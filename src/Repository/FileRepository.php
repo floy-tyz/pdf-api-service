@@ -15,7 +15,7 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FileRepository extends AbstractRepository implements FileRepositoryInterface
 {
-    protected const ENTITY_CLASS = File::class;
+    protected const string ENTITY_CLASS = File::class;
 
     protected ?string $alias = 'file';
 
@@ -36,30 +36,15 @@ class FileRepository extends AbstractRepository implements FileRepositoryInterfa
         return $qb->getQuery()->getResult();
     }
 
-    public function getConversionFiles(int $conversionId): array
+    public function getProcessFiles(int $process): array
     {
         $qb = $this->createQueryBuilder($this->alias);
 
         $qb->andWhere('file.isUsed = true');
-        $qb->andWhere('file.conversion = :conversion_id');
+        $qb->andWhere('file.process = :process_id');
 
-        $qb->setParameter('conversion_id', $conversionId);
+        $qb->setParameter('process_id', $process);
 
         return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @throws NonUniqueResultException
-     */
-    public function getCombinedFile(int $conversionId): File
-    {
-        $qb = $this->createQueryBuilder($this->alias);
-
-        $qb->andWhere('file.isUsed = true');
-        $qb->andWhere('file.conversion = :conversion_id');
-
-        $qb->setParameter('conversion_id', $conversionId);
-
-        return $qb->getQuery()->getOneOrNullResult();
     }
 }

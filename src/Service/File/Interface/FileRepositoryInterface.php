@@ -9,8 +9,10 @@ interface FileRepositoryInterface extends RepositoryInterface
 {
     public function getUnusedFiles(): array;
 
-    public function getConversionFiles(int $conversionId): array;
-
-    public function getCombinedFile(int $conversionId): File;
+    /**
+     * @param int $process
+     * @return array<File>
+     */
+    public function getProcessFiles(int $process): array;
 }
 

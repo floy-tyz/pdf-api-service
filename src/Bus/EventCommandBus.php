@@ -21,18 +21,8 @@ final class EventCommandBus implements EventBusInterface
         $this->messageBus = $messageBus;
     }
 
-    /**
-     * @throws Throwable
-     */
     public function publish(EventInterface $event): mixed
     {
-        try {
-            return $this->handle($event);
-        } catch (HandlerFailedException $handlerFailedException) {
-            /** @var array{0: Throwable} $exceptions */
-            $exceptions = $handlerFailedException->getNestedExceptions();
-
-            throw $exceptions[0];
-        }
+        return $this->handle($event);
     }
 }

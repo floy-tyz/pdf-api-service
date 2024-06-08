@@ -23,8 +23,7 @@ framework:
                     max_delay: 0
         
         routing:
-            App\Service\Conversion\Event\SendFilesToConvertServiceEvent: async_transport
-            App\Service\Conversion\Event\SendFilesToCombineServiceEvent: async_transport
+            App\Service\Process\Event\SendFilesToProcessServiceEvent: async_transport
             
 when@test:
     framework:

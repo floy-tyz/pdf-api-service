@@ -38,7 +38,7 @@ export default {
     mounted() {
         this.pooling()
         this.textInterval = setInterval(this.updateInterval, 1000);
-        this.poolingInterval = setInterval(this.pooling, 2500);
+        this.poolingInterval = setInterval(this.pooling, 3000);
     },
 
     methods: {
@@ -58,7 +58,7 @@ export default {
             let response = null;
 
             try {
-                response = await axios.get(`/api/v1/conversion/${this.$route.params.uuid}/files/converted`)
+                response = await axios.get(`/api/v1/process/${this.$route.params.uuid}/files`)
             } catch (e) {
                 alert(e.message);
                 this.$router.push({name: 'home.page'})

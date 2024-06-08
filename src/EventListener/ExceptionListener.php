@@ -7,6 +7,7 @@ use App\Traits\ResponseStatusTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class ExceptionListener
 {
@@ -25,12 +26,29 @@ class ExceptionListener
             $event->setResponse($response);
         }
 
+        if ($exception instanceof UnprocessableEntityHttpException) {
+
+            $event->allowCustomResponseCode();
+
+            $response = $this->failed(['errors' => [$exception->getMessage()]]);
+
+            $event->setResponse($response);
+
+            $event->stopPropagation();
+        }
+
         /** @var BusinessException $exception */
         if ($exception instanceof BusinessException) {
 
             $event->allowCustomResponseCode();
 
-            $response = $this->failed(['errors' => [...[$exception->getMessage()], ...$exception->getErrors()]]);
+            $errors = $exception->getErrors();
+
+            if ($exception->getMessage()) {
+                array_unshift($errors, $exception->getMessage());
+            }
+
+            $response = $this->failed(['errors' => $errors]);
 
             $event->setResponse($response);
 
