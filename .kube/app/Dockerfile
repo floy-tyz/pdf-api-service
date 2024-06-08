@@ -81,6 +81,8 @@ COPY . /var/www/html
 
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
 
-RUN composer i && yarn && yarn build
+RUN composer i
+
+RUN yarn && yarn build
 
 CMD ["supervisord"]

@@ -32,7 +32,8 @@
         "symfony/webpack-encore-bundle": "^2.0",
         "symfony/yaml": "7.1.*",
         "twig/twig": "^3.0",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11",
+        "ext-mbstring": "*"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.50"
