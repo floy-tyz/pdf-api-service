@@ -75,8 +75,6 @@ RUN set -xe \
     && rm -rf /usr/local/lib/php/doc/* /var/cache/apk/*
     ###< CACHE CLEAR ###
 
-###> CREATE AND SWITCH TO NON-ROOT USER ###
-RUN addgroup -S www-data && adduser -S -G www-data www-data
 USER www-data
 WORKDIR /var/www/html
 
@@ -84,7 +82,7 @@ COPY --chown=www-data:www-data . /var/www/html
 
 COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
 
-RUN composer i
+RUN composer install --no-dev --optimize-autoloader
 
 RUN yarn && yarn build
 
