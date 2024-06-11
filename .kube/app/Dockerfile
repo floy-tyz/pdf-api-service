@@ -76,6 +76,7 @@ RUN set -xe \
     ###< CACHE CLEAR ###
 
 USER www-data
+
 WORKDIR /var/www/html
 
 COPY --chown=www-data:www-data . /var/www/html

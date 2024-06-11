@@ -48,7 +48,7 @@ class ProcessApiController extends AbstractController
         $files = $request->files->all();
 
         $this->logger->critical("MESSAGES COUNT " . count($files));
-        $this->logger->critical("MESSAGES DESTINATION " . (array_pop($files))->getPath());
+        $this->logger->critical("MESSAGES DESTINATION " . serialize($files));
 
         $this->eventBus->publish(new SaveProcessedFilesEvent($process, $request->files->all()));
 
