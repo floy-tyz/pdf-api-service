@@ -75,16 +75,22 @@ RUN set -xe \
     && rm -rf /usr/local/lib/php/doc/* /var/cache/apk/*
     ###< CACHE CLEAR ###
 
-USER www-data
+COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-COPY --chown=www-data:www-data . /var/www/html
+COPY --chown=www-data:www-data composer.json composer.lock package.json yarn.lock ./
 
-COPY --from=composer:2.1 /usr/bin/composer /usr/bin/composer
+RUN composer install --no-scripts --no-dev --optimize-autoloader
 
-RUN composer install --no-dev --optimize-autoloader
+RUN yarn install
 
-RUN yarn && yarn build
+COPY --chown=www-data:www-data . .
+
+RUN composer run-script post-install-cmd
+
+RUN yarn build
+
+USER www-data
 
 CMD ["supervisord"]
