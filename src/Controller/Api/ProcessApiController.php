@@ -11,6 +11,8 @@ use App\Service\Process\Event\CreateNewProcessEvent;
 use App\Service\Process\Request\UploadProcessFilesRequest;
 use App\Service\File\Interface\FileRepositoryInterface;
 use App\Traits\ResponseStatusTrait;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,11 +50,18 @@ class ProcessApiController extends AbstractController
     #[Route('/api/v1/process/{uuid}/files', name: 'api.process.get.files', methods: ["GET"])]
     public function getProcessedFiles(?Process $process): Response
     {
+        # todo replace with external validator
         if (!$process) {
             throw new EntityNotFoundException();
         }
 
-        # todo replace with external validator
+        if ($process->getDateProcessed()) {
+            $ttl = ($process->getDateProcessed())->add(new DateInterval('PT1M'));
+            if (new DateTime() > $ttl) {
+                throw new EntityNotFoundException();
+            }
+        }
+
         if ($process->getStatus() !== ProcessStatusEnum::STATUS_PROCESSED->value) {
             return $this->failed();
         }
@@ -63,6 +72,6 @@ class ProcessApiController extends AbstractController
             ['groups' => ['files']]
         );
 
-        return $this->success(['files' => $files]);
+        return $this->success(['data' => ['files' => $files]]);
     }
 }

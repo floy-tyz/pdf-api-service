@@ -10,6 +10,14 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function __construct(string $environment, bool $debug)
+    {
+        parent::__construct($environment, $debug);
+
+        setlocale(LC_TIME, 'ru_RU.UTF-8');
+        date_default_timezone_set('Europe/Moscow');
+    }
+
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $configDir = $this->getConfigDir();

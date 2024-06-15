@@ -46,6 +46,7 @@ services:
             - TERM=xterm-256color
             - PS1=${PS1}
             - PHP_IDE_CONFIG=${XDEBUG_SERVER_NAME}
+            - TZ=Europe/Moscow
         volumes:
             ###> BASH VOLUMES ###
             - ./bash/.bash_aliases:/home/${USER}/.bash_aliases
@@ -59,8 +60,6 @@ services:
             - ${YARNRC_PATH:-./yarn/.yarnrc}:/home/${USER}/.yarnrc
             - ${YARN_CACHE_PATH:-./yarn/.config}:/home/${USER}/.cache
             - ${YARN_PATH:-./yarn}:/home/${USER}/.yarn
-            ###> TIMEZONE VOLUMES
-            - /etc/localtime:/etc/localtime:ro
             ###> PHP INI VOLUME
             - ./app/php.ini:/usr/local/etc/php/conf.d/custom.php.ini
             ###> PROJECT VOLUME ###
@@ -85,6 +84,8 @@ services:
             - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - POSTGRES_DB=${POSTGRES_DB}
+            - TZ=Europe/Moscow
+            - PGTZ=Europe/Moscow
         ports:
             - "5432:5432"
         networks:

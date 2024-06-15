@@ -19,7 +19,8 @@ ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl" \
     LC_ADDRESS="ru_RU.UTF-8" \
     LC_TELEPHONE="ru_RU.UTF-8" \
     LC_MEASUREMENT="ru_RU.UTF-8" \
-    LC_IDENTIFICATION="ru_RU.UTF-8"
+    LC_IDENTIFICATION="ru_RU.UTF-8" \
+    TZ="Europe/Moscow"
 ###< LOCALE ENV ###
 
 RUN set -xe \
@@ -30,6 +31,7 @@ RUN set -xe \
         vim \
         icu \
         yarn \
+        tzdata \
     ###> LOCALE EXTENSION ### \
         musl-locales \
         musl-locales-lang \

@@ -30,6 +30,7 @@ RUN set -xe \
         vim \
         yarn \
         icu \
+        tzdata \
     ###> LOCALE EXTENSION ### \
         musl-locales \
         musl-locales-lang \

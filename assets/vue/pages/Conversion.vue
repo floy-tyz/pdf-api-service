@@ -38,7 +38,9 @@ export default {
 
     async mounted() {
         await this.getCentrifugoToken()
-        await this.sse()
+        if (!await this.fetchFiles()) {
+            await this.sse()
+        }
         this.textInterval = setInterval(this.updateInterval, 1000);
     },
 
@@ -51,6 +53,26 @@ export default {
             }
 
             this.intervalValue++;
+        },
+
+        async fetchFiles() {
+            let response;
+
+            try {
+                response = await axios.get(`/api/v1/process/${this.$route.params.uuid}/files`)
+            } catch (e) {
+                this.$router.push({name: 'home.page'})
+                return true;
+            }
+
+            if (!response.data?.success) {
+                return false;
+            }
+
+            this.files = response.data.data.files;
+            clearInterval(this.textInterval)
+
+            return true;
         },
 
         async sse() {
