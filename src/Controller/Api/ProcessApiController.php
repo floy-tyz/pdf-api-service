@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Bus\EventBusInterface;
 use App\Entity\Process;
 use App\Entity\File;
+use App\Serializer\SerializerInterface;
 use App\Service\Process\Enum\ProcessStatusEnum;
 use App\Service\Process\Event\CreateNewProcessEvent;
 use App\Service\Process\Request\UploadProcessFilesRequest;
@@ -13,7 +14,7 @@ use App\Traits\ResponseStatusTrait;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ProcessApiController extends AbstractController
 {
@@ -22,6 +23,7 @@ class ProcessApiController extends AbstractController
     public function __construct(
         private readonly EventBusInterface $eventBus,
         private readonly FileRepositoryInterface $fileRepository,
+        private readonly SerializerInterface $serializer
     ) {
     }
 
@@ -55,20 +57,12 @@ class ProcessApiController extends AbstractController
             return $this->failed();
         }
 
-        /** @var array<File> $files */
-        $files = $this->fileRepository->getProcessFiles($process->getId());
+        $files = $this->serializer->normalize(
+            $this->fileRepository->getProcessFiles($process->getId()),
+            File::class,
+            ['groups' => ['files']]
+        );
 
-        // todo replace to serializer
-        $tmp = [];
-        foreach ($files as $file) {
-            $href = explode('/', $file->getPath());
-            unset($href[0]);
-            $tmp[] = [
-                'name' => $file->getOriginalFileName(),
-                'href' => $this->generateUrl('api.files.get.by.uuid', ['uuid' => $file->getUuidFileName()]),
-            ];
-        }
-
-        return $this->success(['files' => $tmp]);
+        return $this->success(['files' => $files]);
     }
 }

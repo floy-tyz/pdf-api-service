@@ -4,8 +4,13 @@ namespace App\Entity;
 
 use App\Repository\EntityInterface;
 use App\Repository\FileRepository;
+use App\Serializer\Attribute\Callback;
+use App\Serializer\Callback\UrlCallback;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
 
@@ -24,6 +29,8 @@ class File implements EntityInterface
     protected string $path;
 
     #[ORM\Column(type: "string")]
+    #[SerializedName('name')]
+    #[Groups(['files'])]
     protected string $originalFileName;
 
     #[ORM\Column(type: "uuid")]
@@ -47,6 +54,11 @@ class File implements EntityInterface
     #[ORM\ManyToOne(inversedBy: 'files')]
     #[ORM\JoinColumn(referencedColumnName: 'id', nullable: false)]
     private ?Process $process = null;
+
+    #[Groups('files')]
+    #[Callback(class: UrlCallback::class, context: ['groups' => ['files']])]
+    #[Context(context: ['url' => ['route' => 'api.files.get.by.uuid', 'parameters' => ['uuid' => 'getUuidFileName']]])]
+    protected ?string $href = null;
 
     public function __construct()
     {
@@ -182,5 +194,15 @@ class File implements EntityInterface
     public function setUuidFileName(Uuid $uuidFileName): void
     {
         $this->uuidFileName = $uuidFileName;
+    }
+
+    public function getHref(): ?string
+    {
+        return $this->href;
+    }
+
+    public function setHref(?string $href): void
+    {
+        $this->href = $href;
     }
 }

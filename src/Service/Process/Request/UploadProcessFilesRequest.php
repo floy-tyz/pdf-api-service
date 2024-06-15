@@ -29,10 +29,6 @@ readonly class UploadProcessFilesRequest
         try {
             $dto = $this->serializer->denormalize([...$request->request->all(), ...$request->files->all()],
                 UploadProcessFilesRequestDto::class,
-                null,
-                [
-                    'disable_type_enforcement' => true,
-                ]
             );
         } catch (ExceptionInterface $e) {
             throw new BusinessException($e->getMessage());
@@ -57,7 +53,8 @@ readonly class UploadProcessFilesRequest
     private function validateExtension(UploadProcessFilesRequestDto $dto): void
     {
         $constraints = [
-            new Assert\NotNull(),
+            new Assert\NotNull(message: '"extension" не должно быть null'),
+            new Assert\NotBlank(message: '"extension" не должно быть пустым'),
             new Assert\Type('string'),
             new ValidProcessExtension(ProcessMap::SUPPORTED_PROCESS_TYPES[$dto->getKey()]['extension']),
         ];
@@ -68,6 +65,7 @@ readonly class UploadProcessFilesRequest
     private function validateFiles(UploadProcessFilesRequestDto $dto): void
     {
         $constraints = [
+            new Assert\Count(min: 1, minMessage: 'Файлы не указаны'),
             new Assert\All([
                 new Assert\File(
                     maxSize: "10M",

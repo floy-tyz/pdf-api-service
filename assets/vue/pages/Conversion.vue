@@ -32,13 +32,14 @@ export default {
             poolingInterval: null,
             intervalValue: 0,
             files: [],
+            centrifugo_token: null
         };
     },
 
-    mounted() {
-        this.pooling()
+    async mounted() {
+        await this.getCentrifugoToken()
+        await this.sse()
         this.textInterval = setInterval(this.updateInterval, 1000);
-        this.poolingInterval = setInterval(this.pooling, 3000);
     },
 
     methods: {
@@ -52,13 +53,48 @@ export default {
             this.intervalValue++;
         },
 
-        // todo change to sse
-        async pooling() {
+        async sse() {
+            const url = new URL(window.location.origin + '/connection/uni_sse');
 
+            let subs = {};
+            subs[this.$route.params.uuid] = {
+                recover: true,
+            }
+
+            url.searchParams.append("cf_connect", JSON.stringify({
+                "token": this.centrifugo_token,
+                "subs": subs
+            }));
+
+            const eventSource = new EventSource(url);
+
+            eventSource.onmessage = (e) => {
+
+                const data = JSON.parse(e.data);
+
+                if (data.connect
+                    && data.connect.subs[this.$route.params.uuid]
+                    && data.connect.subs[this.$route.params.uuid].publications?.length
+                ) {
+                    this.files = data.connect.subs[this.$route.params.uuid].publications[0].data.files;
+                    eventSource.close();
+                    clearInterval(this.textInterval)
+                    return;
+                }
+
+                if (data.pub?.data) {
+                    this.files = data.pub?.data.files;
+                    eventSource.close();
+                    clearInterval(this.textInterval)
+                }
+            };
+        },
+
+        async getCentrifugoToken() {
             let response = null;
 
             try {
-                response = await axios.get(`/api/v1/process/${this.$route.params.uuid}/files`)
+                response = await axios.get(`/api/v1/centrifugo/token/anonymous`)
             } catch (e) {
                 alert(e.message);
                 this.$router.push({name: 'home.page'})
@@ -69,10 +105,7 @@ export default {
                 return;
             }
 
-            clearInterval(this.textInterval);
-            clearInterval(this.poolingInterval);
-
-            this.files = response.data.files;
+            this.centrifugo_token = response.data.data.token
         },
     },
 };

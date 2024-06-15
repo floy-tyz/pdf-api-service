@@ -24,7 +24,8 @@ services:
         networks:
             - reverse-proxy
             - backend
-    
+            - centrifugo
+
     app:
         build:
             context: ./app
@@ -70,6 +71,7 @@ services:
         networks:
             - backend
             - rabbitmq
+            - centrifugo
         extra_hosts:
             - converter.pdf.local:${DOCKER_IP}
     
@@ -87,7 +89,7 @@ services:
             - "5432:5432"
         networks:
             - backend
-            - frontend_postgres_db
+            - api_postgres_db
     
     adminer:
         image: adminer:latest
@@ -100,22 +102,25 @@ services:
             - "8080:8080"
         networks:
             - reverse-proxy
-            - frontend_postgres_db
-
-
+            - api_postgres_db
+            
 networks:
     reverse-proxy:
         name: ${PROXY_NETWORK_NAME:-docker_engine_reverse_proxy}
         external: true
     
     rabbitmq:
-        name: ${RABBITMQ_NETWORK_NAME:-pdf_frontend_rabbitmq}
+        name: ${RABBITMQ_NETWORK_NAME:-pdf_api_rabbitmq}
+        external: true
+        
+    centrifugo:
+        name: ${CENTRIFUGO_NETWORK_NAME:-pdf_api_centrifugo}
         external: true
     
     backend:
         driver: bridge
         name: ${CONTAINER_NAME:-unnamed}_backend_network
     
-    frontend_postgres_db:
+    api_postgres_db:
         driver: bridge
         name: ${CONTAINER_NAME:-unnamed}_postgres_db

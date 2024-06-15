@@ -8,17 +8,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class UploadProcessFilesRequestDto
 {
     /**
-     * @param string $key
-     * @param string $extension
+     * @param string|null $key
+     * @param string|null $extension
      * @param array<UploadedFile> $files
      * @param array<int, string> $context
      */
     public function __construct(
-        #[Assert\NotNull]
+        #[Assert\NotNull(message: '"key" не должно быть null')]
+        #[Assert\NotBlank(message: '"key" не должно быть пустым')]
         #[Assert\Type('string')]
-        private string $key,
-        private string $extension,
-        private array $files,
+        private ?string $key = null,
+        private ?string $extension = null,
+        private array $files = [],
         private array $context = [],
     ) {
     }

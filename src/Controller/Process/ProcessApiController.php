@@ -3,18 +3,20 @@
 namespace App\Controller\Process;
 
 use App\Bus\EventBusInterface;
+use App\Entity\File;
 use App\Entity\Process;
+use App\Serializer\SerializerInterface;
 use App\Service\Process\Enum\ProcessStatusEnum;
 use App\Service\Process\Event\SaveProcessedFilesEvent;
 use App\Service\File\Interface\FileRepositoryInterface;
 use App\Traits\ResponseStatusTrait;
 use Doctrine\ORM\EntityNotFoundException;
 use Exception;
-use Psr\Log\LoggerInterface;
+use Fresh\CentrifugoBundle\Service\CentrifugoInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ProcessApiController extends AbstractController
 {
@@ -23,7 +25,8 @@ class ProcessApiController extends AbstractController
     public function __construct(
         private readonly EventBusInterface $eventBus,
         private readonly FileRepositoryInterface $fileRepository,
-        private readonly LoggerInterface $logger
+        private readonly CentrifugoInterface $centrifugo,
+        private readonly SerializerInterface $serializer
     ) {
     }
 
@@ -43,6 +46,17 @@ class ProcessApiController extends AbstractController
         }
 
         $this->eventBus->publish(new SaveProcessedFilesEvent($process, $request->files->all()));
+
+        $files = $this->serializer->normalize(
+            $this->fileRepository->getProcessFiles($process->getId()),
+            File::class,
+            ['groups' => ['files']]
+        );
+
+        $this->centrifugo->publish([
+                'files' => $files
+            ], $process->getUuid()
+        );
 
         return $this->success();
     }

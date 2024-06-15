@@ -26,6 +26,9 @@
             "migrations/.gitignore"
         ]
     },
+    "fresh/centrifugo-bundle": {
+        "version": "5.2.0"
+    },
     "symfony/console": {
         "version": "6.3",
         "recipe": {

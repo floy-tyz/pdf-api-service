@@ -7,7 +7,7 @@ use App\Service\Process\Map\ProcessMap;
 use App\Traits\ResponseStatusTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ProcessMapApiController extends AbstractController
 {
