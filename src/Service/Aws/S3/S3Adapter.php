@@ -27,42 +27,34 @@ class S3Adapter implements S3AdapterInterface
 
     public function putObject(string $bucketName, string $key, string $filePath): string
     {
-        try {
-            if (!$this->isBucketExists($bucketName)) {
-                $this->createBucket($bucketName);
-            }
-
-            $result = $this->s3Client->putObject([
-                'Bucket' => $bucketName,
-                'Key' => $key,
-                'SourceFile' => $filePath,
-            ]);
-
-            return $result->get('ObjectURL');
-        } catch (AwsException $e) {
-            throw new BusinessException($e->getMessage());
+        if (!$this->isBucketExists($bucketName)) {
+            $this->createBucket($bucketName);
         }
+
+        $result = $this->s3Client->putObject([
+            'Bucket' => $bucketName,
+            'Key' => $key,
+            'SourceFile' => $filePath,
+        ]);
+
+        return $result->get('ObjectURL');
     }
 
     public function getObjectContent(string $bucketName, string $key): string
     {
-        try {
-            if (!$this->isBucketExists($bucketName)) {
-                throw new BusinessException('Пространство имен файла не найдено');
-            }
-
-            $result = $this->s3Client->getObject([
-                'Bucket' => $bucketName,
-                'Key' => $key,
-            ]);
-
-            /** @var Stream $body */
-            $body = $result->get('Body');
-
-            return $body->getContents();
-        } catch (AwsException) {
-            throw new NotFoundHttpException();
+        if (!$this->isBucketExists($bucketName)) {
+            throw new BusinessException('Пространство имен файла не найдено');
         }
+
+        $result = $this->s3Client->getObject([
+            'Bucket' => $bucketName,
+            'Key' => $key,
+        ]);
+
+        /** @var Stream $body */
+        $body = $result->get('Body');
+
+        return $body->getContents();
     }
 
     /**
