@@ -3,26 +3,27 @@
 namespace App\Service\Process\Event;
 
 use App\Bus\EventInterface;
-use App\Entity\Process;
+use App\Entity\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-readonly class SaveProcessedFilesEvent implements EventInterface
+readonly class PublishProcessedFilesEvent implements EventInterface
 {
     public function __construct(
-        private Process $process,
-        private array $files
+        private string $processUuid,
+        private array $files,
     ) {
     }
 
     /**
-     * @return array<UploadedFile>
+     * @return array<File>
      */
     public function getFiles(): array
     {
         return $this->files;
     }
-    public function getProcess(): Process
+
+    public function getProcessUuid(): string
     {
-        return $this->process;
+        return $this->processUuid;
     }
 }

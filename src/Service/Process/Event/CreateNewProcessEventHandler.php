@@ -2,25 +2,28 @@
 
 namespace App\Service\Process\Event;
 
+use App\Bus\AsyncBusInterface;
 use App\Bus\EventBusInterface;
 use App\Bus\EventHandlerInterface;
+use App\Entity\File;
 use App\Entity\Process;
+use App\Service\File\Event\PutFileToStorageEvent;
+use App\Service\File\Event\SaveFileEntityFromPathEvent;
+use App\Service\Process\Event\External\ProcessFilesEvent;
 use App\Service\Process\Interface\ProcessRepositoryInterface;
-use App\Service\File\Event\SaveFileEntityFromFilePathEvent;
-use Symfony\Component\Messenger\Exception\ExceptionInterface;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 readonly class CreateNewProcessEventHandler implements EventHandlerInterface
 {
+    const string S3_BUCKET = 'non-processed-files';
+
     public function __construct(
         private EventBusInterface $eventBus,
-        private MessageBusInterface $messageBus,
+        private AsyncBusInterface $asyncBus,
         private ProcessRepositoryInterface $processRepository,
     ) {
     }
 
     /**
-     * @throws ExceptionInterface
      */
     public function __invoke(CreateNewProcessEvent $event): string
     {
@@ -30,20 +33,37 @@ readonly class CreateNewProcessEventHandler implements EventHandlerInterface
         $process->setContext($event->getContext());
         $process->setExtension($event->getExtension());
 
+        $filesUuids = [];
+
         foreach ($event->getFiles() as $file) {
-            $process->addFile(
-                $this->eventBus->publish(new SaveFileEntityFromFilePathEvent(
-                    $file->getRealPath(),
-                    $file->getClientOriginalName(),
-                    $file->getClientOriginalExtension(),
-                    true,
-                )
+
+            /** @var File $fileEntity */
+            $fileEntity = $this->eventBus->publish(new SaveFileEntityFromPathEvent(
+                $file->getRealPath(),
+                $file->getClientOriginalName(),
+                $file->getClientOriginalExtension(),
             ));
+
+            $this->eventBus->publish(new PutFileToStorageEvent(
+                self::S3_BUCKET,
+                $fileEntity->getUuid(),
+                $file->getRealPath(),
+            ));
+
+            $process->addFile($fileEntity);
+
+            $filesUuids[] = $fileEntity->getUuid();
         }
 
         $this->processRepository->save($process);
 
-        $this->messageBus->dispatch(new SendFilesToProcessServiceEvent($process->getId()));
+        $this->asyncBus->dispatch(new ProcessFilesEvent(
+            $process->getUuid(),
+            $filesUuids,
+            $process->getKey(),
+            $process->getExtension(),
+            $process->getContext(),
+        ));
 
         return $process->getUuid();
     }

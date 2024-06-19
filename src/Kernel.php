@@ -1,8 +1,15 @@
 <?php
 
+/** @noinspection PhpMultipleClassDeclarationsInspection */
+
 namespace App;
 
+use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Override;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
@@ -16,6 +23,25 @@ class Kernel extends BaseKernel
 
         setlocale(LC_TIME, 'ru_RU.UTF-8');
         date_default_timezone_set('Europe/Moscow');
+    }
+
+    #[Override]
+    protected function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $container->getDefinition('doctrine.orm.default_configuration')
+                    ->addMethodCall(
+                        'setIdentityGenerationPreferences',
+                        [
+                            [
+                                PostgreSQLPlatform::class => ClassMetadataInfo::GENERATOR_TYPE_SEQUENCE,
+                            ],
+                        ]
+                    );
+            }
+        });
     }
 
     protected function configureContainer(ContainerConfigurator $container): void

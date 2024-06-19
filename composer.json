@@ -9,6 +9,7 @@
         "ext-fileinfo": "*",
         "ext-iconv": "*",
         "ext-mbstring": "*",
+        "aws/aws-sdk-php": "^3.314",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3.1",
         "doctrine/orm": "^2.16",

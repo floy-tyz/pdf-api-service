@@ -10,12 +10,12 @@ interface FileManagerInterface
      * Получить абсолютный путь до файла
      * @return string абсолютный путь к файлу
      */
-    public function getAbsolutePath(string $filepath): string;
+    public function getFileAbsolutePath(string $filepath): string;
 
     /**
      * Заполнить сущность исходя из параметров файла
      */
-    public function parseAndFillFileEntity(File $file, string $relativeFilePath, string $absoluteFilePath): void;
+    public function parseAndFillFileEntity(File $file, string $filePath): void;
 
     /**
      * Переместить файл в хранилище

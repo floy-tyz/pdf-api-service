@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 
 class FileManager implements FileManagerInterface
 {
-    private const TEMP_DIRECTORY_NAME = 'tmp';
+    private const string TEMP_DIRECTORY_NAME = 'tmp';
 
     public function __construct(
         private readonly ParameterBagInterface $parameterBag,
@@ -25,23 +25,29 @@ class FileManager implements FileManagerInterface
     /**
      * @inheritDoc
      */
-    public function getAbsolutePath(string $filepath): string
+    public function getFileAbsolutePath(string $filepath): string
     {
         return $this->parameterBag->get('kernel.project_dir') . DIRECTORY_SEPARATOR . $filepath;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function parseAndFillFileEntity(File $file, string $relativeFilePath, string $absoluteFilePath): void
+    public function parseAndFillFileEntity(File $file, string $filePath): void
     {
-        $fileData = pathinfo($absoluteFilePath);
+        $fileSize = filesize($filePath);
+        $mimeType = mime_content_type($filePath);
 
-        $file->setPath($relativeFilePath);
-        $file->setOriginalFileName($fileData['basename']);
-        $file->setExtension($fileData['extension']);
-        $file->setSize(filesize($absoluteFilePath));
-        $file->setMimeType(mime_content_type($absoluteFilePath) ?? null);
+        if (!$fileSize) {
+            throw new IOException('Invalid file size');
+        }
+
+        if (!$mimeType) {
+            $mimeType = 'application/octet-stream';
+        }
+
+        $file->setSize($fileSize);
+        $file->setMimeType($mimeType);
     }
 
     /**

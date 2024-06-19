@@ -4,8 +4,9 @@ namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
 use App\Entity\File;
+use App\Service\Aws\S3\S3AdapterInterface;
+use App\Service\File\Interface\FileManagerInterface;
 use App\Service\File\Interface\FileRepositoryInterface;
-use App\Service\File\Utils\Dir;
 use App\Traits\ResponseStatusTrait;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +24,9 @@ class FileApiController extends AbstractController
     public function __construct(
         private readonly EventBusInterface $eventBus,
         private readonly FileRepositoryInterface $fileRepository,
-        private readonly ParameterBagInterface $parameterBag
+        private readonly ParameterBagInterface $parameterBag,
+        private readonly S3AdapterInterface $s3Adapter,
+        private readonly FileManagerInterface $fileManager
     ) {
     }
 
@@ -34,25 +37,18 @@ class FileApiController extends AbstractController
     public function getFile(Request $request): Response
     {
         /** @var File $file */
-        $file = $this->fileRepository->findOneBy(['uuidFileName' => $request->get('uuid')]);
+        $file = $this->fileRepository->findOneBy(['uuid' => $request->get('uuid')]);
 
         if (!$file) {
             throw new EntityNotFoundException();
         }
 
-        $filePath = $this->parameterBag->get('kernel.project_dir') . DIRECTORY_SEPARATOR . $file->getPath();
+        $filePath = $this->fileManager->getTempFilePath();
 
-        Dir::checkFileExist($filePath);
+        file_put_contents($filePath, $this->s3Adapter->getObjectContent('processed-files', $file->getUuid())) ;
 
         BinaryFileResponse::trustXSendfileTypeHeader();
 
-        $response = new BinaryFileResponse($filePath);
-
-        $response->setContentDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $file->getOriginalFileName()
-        );
-
-        return $response;
+        return $this->file($filePath, $file->getOriginalFileName(), ResponseHeaderBag::DISPOSITION_INLINE);
     }
 }

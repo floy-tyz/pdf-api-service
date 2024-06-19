@@ -26,15 +26,12 @@ class File implements EntityInterface
     protected int $id;
 
     #[ORM\Column(type: "string")]
-    protected string $path;
-
-    #[ORM\Column(type: "string")]
     #[SerializedName('name')]
     #[Groups(['files'])]
     protected string $originalFileName;
 
     #[ORM\Column(type: "uuid")]
-    protected Uuid $uuidFileName;
+    protected Uuid $uuid;
 
     #[ORM\Column(type: "string")]
     protected string $extension;
@@ -57,29 +54,17 @@ class File implements EntityInterface
 
     #[Groups('files')]
     #[Callback(class: UrlCallback::class, context: ['groups' => ['files']])]
-    #[Context(context: ['url' => ['route' => 'api.files.get.by.uuid', 'parameters' => ['uuid' => 'getUuidFileName']]])]
+    #[Context(context: ['url' => ['route' => 'api.files.get.by.uuid', 'parameters' => ['uuid' => 'getUuid']]])]
     protected ?string $href = null;
 
     public function __construct()
     {
-        $this->uuidFileName = UuidV4::v4();
+        $this->uuid = UuidV4::v4();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPath(): ?string
-    {
-        return $this->path;
-    }
-
-    public function setPath(string $path): self
-    {
-        $this->path = $path;
-
-        return $this;
     }
 
     public function getOriginalFileName(): ?string
@@ -186,14 +171,14 @@ class File implements EntityInterface
         return $this;
     }
 
-    public function getUuidFileName(): string
+    public function getUuid(): string
     {
-        return $this->uuidFileName->toRfc4122();
+        return $this->uuid->toRfc4122();
     }
 
-    public function setUuidFileName(Uuid $uuidFileName): void
+    public function setUuid(Uuid $uuid): void
     {
-        $this->uuidFileName = $uuidFileName;
+        $this->uuid = $uuid;
     }
 
     public function getHref(): ?string
