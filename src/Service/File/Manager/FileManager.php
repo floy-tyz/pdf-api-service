@@ -102,7 +102,11 @@ class FileManager implements FileManagerInterface
      */
     public function getTempFilePath(): string
     {
-        return $this->getTempDirectoryPath() . DIRECTORY_SEPARATOR . Uuid::v4();
+        $fileHandleResource = tmpfile();
+
+        $metaData = stream_get_meta_data($fileHandleResource);
+
+        return $metaData['uri'];
     }
 
     /**
