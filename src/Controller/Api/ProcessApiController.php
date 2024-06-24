@@ -14,7 +14,6 @@ use App\Service\File\Interface\FileRepositoryInterface;
 use App\Traits\ResponseStatusTrait;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

@@ -8,9 +8,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/{any?}', name: 'index', requirements: ['any'=>".*"], methods: ["GET"], priority: -1)]
+    #[Route('/', name: 'index', methods: ["GET"])]
     public function index(): Response
     {
-        return $this->render('/pages/index.html.twig');
+        return $this->json(['api' => 'easypdf.ru']);
     }
 }
