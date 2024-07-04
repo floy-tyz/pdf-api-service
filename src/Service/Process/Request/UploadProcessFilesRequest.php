@@ -6,6 +6,7 @@ use App\Exception\BusinessException;
 use App\Service\Process\Map\ProcessMap;
 use App\Service\Process\Request\Constraint\ValidProcessExtension;
 use App\Service\Process\Request\Dto\UploadProcessFilesRequestDto;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -19,12 +20,15 @@ readonly class UploadProcessFilesRequest
         private RequestStack $request,
         private SerializerInterface&DenormalizerInterface $serializer,
         private ValidatorInterface $validator,
+        private LoggerInterface $logger
     ) {
     }
 
     public function getDto()
     {
         $request = $this->request->getMainRequest();
+
+        $this->logger->info('CLIENT_IP:' . $request->getClientIp());
 
         try {
             $dto = $this->serializer->denormalize([...$request->request->all(), ...$request->files->all()],

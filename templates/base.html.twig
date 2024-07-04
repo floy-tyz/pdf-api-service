@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>{{ head_title is defined ? head_title|raw }}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=5">
+
+    <meta name="description" content="{{ head_description is defined ? head_description }}">
+
+    <meta name="theme-color" content="{{ head_themeColor is defined ? head_themeColor : '#ffffff' }}">
+
+    <meta name="robots" content="{{ head_robots is defined ? head_robots : 'index, follow' }}">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    <meta name="csrf-token" content="{{ csrf_token('app') }}" />
+
+</head>
+<body>
+<main id="app">
+
+    <div class="main-wrapper">
+
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+
+    </div>
+
+</main>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app')}}
+{% endblock %}
+
+</body>
+</html>

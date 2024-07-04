@@ -44,12 +44,12 @@ RUN set -xe \
         rabbitmq-c-dev \
         supervisor \
     ###< BASE UTILS ###
-
+    \
     ###> CONFIGURE PHP EXTENSIONS
     && docker-php-ext-configure intl \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     ###< CONFIGURE PHP EXTENSIONS
-
+    \
     ###> INSTALL PHP EXTENSIONS
     && docker-php-ext-install -j$(nproc)  \
         intl \
@@ -59,12 +59,12 @@ RUN set -xe \
         opcache \
         exif \
     ###< INSTALL PHP EXTENSIONS \
-
+    \
     ###> INSTALL PECL AMQP ###
     && pecl install amqp \
     && docker-php-ext-enable amqp \
     ###< INSTALL PECL AMQP ###
-
+    \
     ###> CACHE CLEAR ### \
     && apk del --no-cache \
         make \
