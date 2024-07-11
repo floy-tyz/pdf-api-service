@@ -69,6 +69,6 @@ class ProcessApiController extends AbstractController
             ['groups' => ['files']]
         );
 
-        return $this->success(['data' => ['files' => $files]]);
+        return $this->success(['files' => $files]);
     }
 }

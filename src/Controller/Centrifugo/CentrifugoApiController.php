@@ -23,6 +23,6 @@ class CentrifugoApiController extends AbstractController
     {
         $token = $this->credentialsGenerator->generateJwtTokenForAnonymous();
 
-        return $this->success(['data' => ['token' => $token]]);
+        return $this->success(['token' => $token]);
     }
 }

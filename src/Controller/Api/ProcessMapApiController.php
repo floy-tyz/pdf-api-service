@@ -21,6 +21,6 @@ class ProcessMapApiController extends AbstractController
     #[Route('/api/v1/process/types', name: 'api.process.get.types', methods: ["GET"])]
     public function getSupportedProcesses(): Response
     {
-        return $this->success(['data' => ProcessMap::SUPPORTED_PROCESS_TYPES]);
+        return $this->success(ProcessMap::SUPPORTED_PROCESS_TYPES);
     }
 }

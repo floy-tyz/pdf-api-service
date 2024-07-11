@@ -13,7 +13,7 @@ trait ResponseStatusTrait
      */
     protected function success(array $data = [], int $code = 200): JsonResponse
     {
-        return $this->responseWithStatus(true, $data, $code);
+        return $this->responseWithStatus(true, ['data' => $data], $code);
     }
 
     /**
