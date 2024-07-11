@@ -30,7 +30,6 @@ RUN set -xe \
         bash \
         vim \
         icu \
-        yarn \
         tzdata \
     ###> LOCALE EXTENSION ### \
         musl-locales \
@@ -87,12 +86,8 @@ COPY --chown=www-data:www-data composer.json composer.lock package.json yarn.loc
 
 RUN composer install --no-scripts --no-dev --optimize-autoloader
 
-RUN yarn install
-
 COPY --chown=www-data:www-data . .
 
 RUN composer run-script post-install-cmd
-
-RUN yarn build
 
 CMD ["supervisord"]

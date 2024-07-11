@@ -4,8 +4,6 @@ WORKDIR /app
 
 COPY . /app
 
-RUN yarn install && yarn encore production
-
 FROM nginx:alpine
 
 RUN apk --update --no-cache add \

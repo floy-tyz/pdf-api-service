@@ -11,8 +11,6 @@ class HomeController extends AbstractController
     #[Route('/', name: 'index', methods: ["GET"])]
     public function index(): Response
     {
-        return $this->render('/pages/index.html.twig');
-//
-//        return $this->json(['api' => 'easypdf.ru']);
+        return $this->json(['api' => 'easypdf.ru']);
     }
 }
