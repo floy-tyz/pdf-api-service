@@ -29,6 +29,7 @@ readonly class UploadProcessFilesRequest
         $request = $this->request->getMainRequest();
 
         $this->logger->info('CLIENT_IP:' . $request->getClientIp());
+        $this->logger->info('ORIGINAL:' . $request->headers->get('x-original-forwarded-for'));
         $this->logger->info('HEADERS:' . $request->headers);
 
         try {
