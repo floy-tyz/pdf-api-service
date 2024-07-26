@@ -45,12 +45,12 @@ RUN set -xe \
         rabbitmq-c-dev \
         supervisor \
     ###< BASE UTILS ###
-
+    \
     ###> CONFIGURE PHP EXTENSIONS ###
     && docker-php-ext-configure intl \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
     ###< CONFIGURE PHP EXTENSIONS ###
-
+    \
     ###> INSTALL PHP EXTENSIONS ###
     && docker-php-ext-install -j$(nproc) \
         intl \
@@ -59,18 +59,19 @@ RUN set -xe \
         pdo_pgsql \
         opcache \
         exif \
+        bcmath \
     ###< INSTALL PHP EXTENSIONS ###
-
+    \
     ###> INSTALL PECL AMQP ###
     && pecl install amqp \
     && docker-php-ext-enable amqp \
     ###< INSTALL PECL AMQP ###
-
+    \
     ###> INSTALL PECL XDEBUG ###
     && pecl install xdebug \
     && docker-php-ext-enable xdebug \
     ###< INSTALL PECL XDEBUG ###
-
+    \
     ###> CLEAN UP ###
     && apk del --no-cache --purge \
         make \

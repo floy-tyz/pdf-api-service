@@ -37,6 +37,7 @@ class ProcessApiController extends AbstractController
         $processUuid = $this->eventBus->publish(new CreateNewProcessEvent(
             $dto->getKey(),
             $dto->getExtension(),
+            $dto->getClientIp(),
             $dto->getFiles(),
             $dto->getContext()
         ));

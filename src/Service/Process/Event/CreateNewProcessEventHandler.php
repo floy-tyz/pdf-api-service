@@ -11,6 +11,8 @@ use App\Service\File\Event\PutFileToStorageEvent;
 use App\Service\File\Event\SaveFileEntityFromPathEvent;
 use App\Service\Process\Event\External\ProcessFilesEvent;
 use App\Service\Process\Interface\ProcessRepositoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 readonly class CreateNewProcessEventHandler implements EventHandlerInterface
 {
@@ -20,6 +22,7 @@ readonly class CreateNewProcessEventHandler implements EventHandlerInterface
         private EventBusInterface $eventBus,
         private AsyncBusInterface $asyncBus,
         private ProcessRepositoryInterface $processRepository,
+        private Security $security
     ) {
     }
 
@@ -32,6 +35,11 @@ readonly class CreateNewProcessEventHandler implements EventHandlerInterface
         $process->setKey($event->getKey());
         $process->setContext($event->getContext());
         $process->setExtension($event->getExtension());
+        $process->setClientIp($event->getClientIp());
+
+        if ($this->security->getUser() instanceof UserInterface) {
+            $process->setOwner($this->security->getUser());
+        }
 
         $filesUuids = [];
 

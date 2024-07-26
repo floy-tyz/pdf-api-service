@@ -5,8 +5,10 @@ namespace App\Service\Process\Request\Dto;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UploadProcessFilesRequestDto
+class UploadProcessFilesRequestDto
 {
+    private ?string $clientIp = null;
+
     /**
      * @param string|null $key
      * @param string|null $extension
@@ -17,19 +19,19 @@ readonly class UploadProcessFilesRequestDto
         #[Assert\NotNull(message: '"key" не должно быть null')]
         #[Assert\NotBlank(message: '"key" не должно быть пустым')]
         #[Assert\Type('string')]
-        private ?string $key = null,
-        private ?string $extension = null,
-        private array $files = [],
-        private array $context = [],
+        private readonly ?string $key = null,
+        private readonly ?string $extension = null,
+        private readonly array $files = [],
+        private readonly array $context = [],
     ) {
     }
 
-    public function getExtension(): string
+    public function getExtension(): ?string
     {
         return $this->extension;
     }
 
-    public function getKey(): string
+    public function getKey(): ?string
     {
         return $this->key;
     }
@@ -42,5 +44,15 @@ readonly class UploadProcessFilesRequestDto
     public function getContext(): array
     {
         return $this->context;
+    }
+
+    public function getClientIp(): ?string
+    {
+        return $this->clientIp;
+    }
+
+    public function setClientIp(?string $clientIp): void
+    {
+        $this->clientIp = $clientIp;
     }
 }

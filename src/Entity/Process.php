@@ -46,6 +46,12 @@ class Process implements EntityInterface
     #[ORM\Column(type: "json")]
     private array $context = [];
 
+    #[ORM\ManyToOne(inversedBy: 'processes')]
+    private ?User $owner = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $clientIp = null;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
@@ -140,5 +146,29 @@ class Process implements EntityInterface
     public function setKey(string $key): void
     {
         $this->key = $key;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getClientIp(): ?string
+    {
+        return $this->clientIp;
+    }
+
+    public function setClientIp(?string $clientIp): static
+    {
+        $this->clientIp = $clientIp;
+
+        return $this;
     }
 }

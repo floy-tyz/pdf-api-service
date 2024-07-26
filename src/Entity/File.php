@@ -36,8 +36,8 @@ class File implements EntityInterface
     #[ORM\Column(type: "string")]
     protected string $extension;
 
-    #[ORM\Column(type: "integer")]
-    protected int $size;
+    #[ORM\Column(type: "string")]
+    protected string $size;
 
     #[ORM\Column(type: "string", nullable: true)]
     protected ?string $mimeType = null;
@@ -91,7 +91,7 @@ class File implements EntityInterface
         return $this;
     }
 
-    public function getSize(): ?int
+    public function getSize(): ?string
     {
         return $this->size;
     }
@@ -108,7 +108,7 @@ class File implements EntityInterface
         return $this;
     }
 
-    public function setSize(int $size): self
+    public function setSize(string $size): self
     {
         $this->size = $size;
 

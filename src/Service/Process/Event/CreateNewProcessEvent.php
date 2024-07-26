@@ -10,6 +10,7 @@ readonly class CreateNewProcessEvent implements EventInterface
     public function __construct(
         private string $key,
         private string $extension,
+        private string $clientIp,
         private array $files,
         private array $context
     ) {
@@ -36,5 +37,10 @@ readonly class CreateNewProcessEvent implements EventInterface
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    public function getClientIp(): string
+    {
+        return $this->clientIp;
     }
 }

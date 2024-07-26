@@ -19,7 +19,7 @@ use Webmozart\Assert\Assert;
  */
 abstract class AbstractRepository extends ServiceEntityRepository implements RepositoryInterface
 {
-    public const ITEMS_PER_PAGE = 25;
+    public const int ITEMS_PER_PAGE = 25;
 
     protected ?string $alias = null;
 
@@ -32,17 +32,17 @@ abstract class AbstractRepository extends ServiceEntityRepository implements Rep
 
     public function save(EntityInterface $entity, bool $flush = true): void
     {
-        $this->_em->persist($entity);
+        $this->getEntityManager()->persist($entity);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 
     public function remove(EntityInterface $entity, bool $flush = true): void
     {
-        $this->_em->remove($entity);
+        $this->getEntityManager()->remove($entity);
         if ($flush) {
-            $this->_em->flush();
+            $this->getEntityManager()->flush();
         }
     }
 

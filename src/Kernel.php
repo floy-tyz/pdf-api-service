@@ -5,7 +5,7 @@
 namespace App;
 
 use Doctrine\DBAL\Platforms\PostgreSQLPlatform;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Override;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -36,7 +36,7 @@ class Kernel extends BaseKernel
                         'setIdentityGenerationPreferences',
                         [
                             [
-                                PostgreSQLPlatform::class => ClassMetadataInfo::GENERATOR_TYPE_SEQUENCE,
+                                PostgreSQLPlatform::class => ClassMetadata::GENERATOR_TYPE_SEQUENCE,
                             ],
                         ]
                     );
