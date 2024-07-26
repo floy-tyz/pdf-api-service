@@ -58,6 +58,7 @@ RUN set -xe \
         pdo_pgsql \
         opcache \
         exif \
+        bcmath \
     ###< INSTALL PHP EXTENSIONS \
     \
     ###> INSTALL PECL AMQP ###
