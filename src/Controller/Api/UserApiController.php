@@ -3,24 +3,17 @@
 namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
-use App\Entity\Process;
-use App\Entity\File;
-use App\Exception\BusinessException;
 use App\Serializer\SerializerInterface;
-use App\Service\Process\Enum\ProcessStatusEnum;
-use App\Service\Process\Event\CreateNewProcessEvent;
-use App\Service\Process\Request\UploadProcessFilesRequest;
 use App\Service\File\Interface\FileRepositoryInterface;
 use App\Service\User\Event\MakeUserEvent;
+use App\Service\User\Http\Request\RegisterUserRequest;
 use App\Traits\ResponseStatusTrait;
-use DateInterval;
-use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class RegisterApiController extends AbstractController
+class UserApiController extends AbstractController
 {
     use ResponseStatusTrait;
 
@@ -32,13 +25,13 @@ class RegisterApiController extends AbstractController
     }
 
     #[Route('/api/register', name: 'api.register', methods: ["POST"])]
-    public function uploadProcessFiles(Request $request): Response
+    public function uploadProcessFiles(RegisterUserRequest $request): Response
     {
-        #todo add extra validator
+        $dto = $request->getDto();
 
         $this->eventBus->publish(new MakeUserEvent(
-            $request->request->get('username'),
-            $request->request->get('password'),
+            $dto->getUsername(),
+            $dto->getPassword(),
             ['ROLE_USER']
         ));
 

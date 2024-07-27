@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Process\Request\Validator;
+namespace App\Service\Process\Http\Validator;
 
-use App\Service\Process\Request\Constraint\ValidProcessExtension;
+use App\Service\Process\Http\Constraint\ValidProcessExtension;
 use Exception;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -19,7 +19,7 @@ class ValidProcessExtensionValidator extends ConstraintValidator
         }
 
         if ($value !== $constraint->allowedExtension) {
-            $this->context->buildViolation($constraint->message)->addViolation();
+            $this->context->buildViolation($constraint->message)->atPath('extension')->addViolation();
         }
     }
 }

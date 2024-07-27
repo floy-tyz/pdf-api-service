@@ -3,14 +3,14 @@
 namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
-use App\Entity\Process;
 use App\Entity\File;
+use App\Entity\Process;
 use App\Exception\BusinessException;
 use App\Serializer\SerializerInterface;
+use App\Service\File\Interface\FileRepositoryInterface;
 use App\Service\Process\Enum\ProcessStatusEnum;
 use App\Service\Process\Event\CreateNewProcessEvent;
-use App\Service\Process\Request\UploadProcessFilesRequest;
-use App\Service\File\Interface\FileRepositoryInterface;
+use App\Service\Process\Http\Request\UploadProcessFilesRequest;
 use App\Traits\ResponseStatusTrait;
 use DateInterval;
 use DateTime;

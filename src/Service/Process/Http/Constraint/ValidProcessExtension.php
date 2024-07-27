@@ -1,8 +1,8 @@
 <?php /** @noinspection PhpMultipleClassDeclarationsInspection */
 
-namespace App\Service\Process\Request\Constraint;
+namespace App\Service\Process\Http\Constraint;
 
-use App\Service\Process\Request\Validator\ValidProcessExtensionValidator;
+use App\Service\Process\Http\Validator\ValidProcessExtensionValidator;
 use Attribute;
 use Symfony\Component\Validator\Constraint;
 
@@ -12,11 +12,11 @@ class ValidProcessExtension extends Constraint
     public string $message = 'Недопустимое расширение для конвертации';
     public string $allowedExtension;
 
-    public function __construct(string $allowedExtension)
+    public function __construct(string $password)
     {
-        parent::__construct(['allowedExtension' => $allowedExtension]);
+        parent::__construct(['allowedExtension' => $password]);
 
-        $this->allowedExtension = $allowedExtension;
+        $this->allowedExtension = $password;
     }
 
     public function validatedBy(): string

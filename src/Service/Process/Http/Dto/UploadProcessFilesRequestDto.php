@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Process\Request\Dto;
+namespace App\Service\Process\Http\Dto;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,17 +10,19 @@ class UploadProcessFilesRequestDto
     private ?string $clientIp = null;
 
     /**
-     * @param string|null $key
-     * @param string|null $extension
      * @param array<UploadedFile> $files
      * @param array<int, string> $context
      */
     public function __construct(
-        #[Assert\NotNull(message: '"key" не должно быть null')]
-        #[Assert\NotBlank(message: '"key" не должно быть пустым')]
         #[Assert\Type('string')]
+        #[Assert\NotNull]
+        #[Assert\NotBlank]
         private readonly ?string $key = null,
+        #[Assert\Type('string')]
+        #[Assert\NotNull]
+        #[Assert\NotBlank]
         private readonly ?string $extension = null,
+        #[Assert\Count(min: 1, minMessage: 'Файлы не указаны')]
         private readonly array $files = [],
         private readonly array $context = [],
     ) {
