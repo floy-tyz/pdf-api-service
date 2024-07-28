@@ -25,7 +25,7 @@ class ProcessMap
             'context' => [
                 ProcessContextMap::MERGE,
                 ProcessContextMap::OPTIMIZE,
-            ]
+            ],
         ],
         self::OFFICE_TO_PDF => [
             'available_extensions' => [
@@ -43,7 +43,16 @@ class ProcessMap
             'extension' => FilesFormatMap::TYPE_PDF['extension'],
             'context' => [
                 ProcessContextMap::OPTIMIZE,
-            ]
+            ],
         ],
     ];
+
+    /**
+     * Supported process types
+     * @return array
+     */
+    public function __invoke(): array
+    {
+        return array_keys(self::SUPPORTED_PROCESS_TYPES);
+    }
 }

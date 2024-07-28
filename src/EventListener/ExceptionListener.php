@@ -44,11 +44,7 @@ class ExceptionListener
 
             $errors = $exception->getErrors();
 
-            if ($exception->getMessage()) {
-                array_unshift($errors, $exception->getMessage());
-            }
-
-            $response = $this->failed(['errors' => $errors]);
+            $response = $this->failed(['message' => $exception->getMessage() ,'errors' => $errors]);
 
             $event->setResponse($response);
 

@@ -2,3 +2,11 @@ parameters:
 
     # Общая папка расположения файлов
     files_storage_dir: '%env(string:STORAGE_DIRECTORY)%'
+
+nelmio_api_doc:
+    documentation:
+        components:
+            schemas:
+                file-download-response:
+                    type: string
+                    format: binary

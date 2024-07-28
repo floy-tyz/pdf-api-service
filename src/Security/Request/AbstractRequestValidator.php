@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Service\Security\Request;
+namespace App\Security\Request;
 
 use App\Exception\BusinessException;
 use App\Serializer\Strategy\Json\JsonSerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
+use TypeError;
 
 abstract class AbstractRequestValidator
 {
@@ -47,12 +49,26 @@ abstract class AbstractRequestValidator
     protected function deserializeRequest(Request $request, string $dtoClass): mixed
     {
         try {
-            return $this->serializer->denormalize([...$request->request->all(), ...$request->files->all()],
+            $test = $this->serializer->denormalize(
+                [...$request->request->all(), ...$request->files->all()],
                 $dtoClass,
+                [
+                    AbstractNormalizer::FILTER_BOOL => true,
+                    AbstractNormalizer::REQUIRE_ALL_PROPERTIES => true,
+                ]
             );
-        } catch (ExceptionInterface $e) {
-            throw new BusinessException($e->getMessage());
         }
+        catch (ExceptionInterface $e) {
+            if (method_exists($e, 'canUseMessageForUser') && $e->canUseMessageForUser()) {
+                throw new BusinessException($e->getMessage());
+            }
+            throw new BusinessException("Неизвестная ошибка, проверьте входные параметры");
+        }
+        catch (TypeError) {
+            throw new BusinessException("Неизвестная ошибка, проверьте входные параметры");
+        }
+
+        return $test;
     }
 
     protected function validate(mixed $data, ?array $constraints = null): void

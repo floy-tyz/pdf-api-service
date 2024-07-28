@@ -4,11 +4,11 @@ namespace App\Service\Process\Http\Request;
 
 use App\Entity\User;
 use App\Exception\BusinessException;
+use App\Security\Request\AbstractRequestValidator;
 use App\Service\Process\Http\Constraint\ValidProcessExtension;
 use App\Service\Process\Http\Dto\UploadProcessFilesRequestDto;
 use App\Service\Process\Interface\ProcessRepositoryInterface;
 use App\Service\Process\Map\ProcessMap;
-use App\Service\Security\Request\AbstractRequestValidator;
 use DateInterval;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;

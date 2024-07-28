@@ -7,13 +7,12 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Attributes as OA;
 
-readonly class RegisterUserRequestDto
+readonly class AuthUserRequestDto
 {
     public function __construct(
         #[Assert\Type('string')]
         #[Assert\NotNull]
         #[Assert\NotBlank]
-        #[UniqueUsername]
         #[OA\Property(example: 'username')]
         private string $username,
 
@@ -22,13 +21,6 @@ readonly class RegisterUserRequestDto
         #[Assert\NotBlank]
         #[OA\Property(example: 'password')]
         private string $password,
-
-        #[Assert\Type('string')]
-        #[Assert\NotNull]
-        #[Assert\NotBlank]
-        #[SerializedName('password_confirm')]
-        #[OA\Property(example: 'password')]
-        private string $passwordConfirm,
     ) {
     }
 
@@ -40,10 +32,5 @@ readonly class RegisterUserRequestDto
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function getPasswordConfirm(): string
-    {
-        return $this->passwordConfirm;
     }
 }

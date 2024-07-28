@@ -16,7 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Attribute\Route;
+use OpenApi\Attributes as OA;
 
+#[OA\Tag(name: 'Файл')]
 class FileApiController extends AbstractController
 {
     use ResponseStatusTrait;
@@ -34,6 +36,19 @@ class FileApiController extends AbstractController
      * @throws EntityNotFoundException
      */
     #[Route('/api/v1/files/{uuid}', name: 'api.files.get.by.uuid', methods: ["GET"])]
+    #[OA\Get(
+        summary: 'Получение файла',
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Получение файла',
+                content: new OA\MediaType(
+                    mediaType: 'application/pdf',
+                    schema: new OA\Schema('#/components/schemas/file-download-response')
+                )
+            ),
+        ]
+    )]
     public function getFile(Request $request): Response
     {
         /** @var File $file */

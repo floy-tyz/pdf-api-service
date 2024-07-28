@@ -1,0 +1,11 @@
+nelmio_api_doc:
+    documentation:
+        components:
+            schemas:
+                centrifugo-anonymous-token-response:
+                    properties:
+                        success: { type: bool }
+                        data:
+                            type: object
+                            properties:
+                                token: string

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\EntityInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_LOGIN', fields: ['login'])]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \App\Repository\EntityInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, EntityInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,7 +38,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \App\Re
     /**
      * @var Collection<int, Process>
      */
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Process::class)]
+    #[ORM\OneToMany(targetEntity: Process::class, mappedBy: 'owner')]
     private Collection $processes;
 
     public function __construct()
