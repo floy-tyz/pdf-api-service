@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Exception\BusinessException;
+use App\Request\Exception\BusinessException;
 use App\Traits\ResponseStatusTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;

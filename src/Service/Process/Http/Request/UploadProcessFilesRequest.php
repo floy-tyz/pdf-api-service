@@ -3,8 +3,8 @@
 namespace App\Service\Process\Http\Request;
 
 use App\Entity\User;
-use App\Exception\BusinessException;
-use App\Security\Request\AbstractRequestValidator;
+use App\Request\Exception\BusinessException;
+use App\Request\Http\AbstractRequestValidator;
 use App\Service\Process\Http\Constraint\ValidProcessExtension;
 use App\Service\Process\Http\Dto\UploadProcessFilesRequestDto;
 use App\Service\Process\Interface\ProcessRepositoryInterface;
@@ -68,6 +68,10 @@ final class UploadProcessFilesRequest extends AbstractRequestValidator
 
     private function validateExtension(UploadProcessFilesRequestDto $dto): void
     {
+        if (!array_key_exists($dto->getKey(), ProcessMap::SUPPORTED_PROCESS_TYPES)) {
+            throw new BusinessException('Недопустимое расширение для конвертации');
+        }
+
         $constraints = [
             new ValidProcessExtension(ProcessMap::SUPPORTED_PROCESS_TYPES[$dto->getKey()]['extension']),
         ];

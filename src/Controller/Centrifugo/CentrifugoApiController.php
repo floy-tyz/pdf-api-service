@@ -2,10 +2,8 @@
 
 namespace App\Controller\Centrifugo;
 
-use App\Entity\File;
 use App\Traits\ResponseStatusTrait;
 use Fresh\CentrifugoBundle\Service\Credentials\CredentialsGenerator;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

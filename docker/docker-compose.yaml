@@ -40,7 +40,7 @@ services:
         tty: true
         environment:
             ### PHP ENV ###
-            - PHP_OPCACHE_VALIDATE_TIMESTAMPS=1
+            - PHP_OPCACHE_VALIDATE_TIMESTAMPS=0
             - VIRTUAL_PROTO=fastcgi
             ###> BASH COLORS ###
             - TERM=xterm-256color

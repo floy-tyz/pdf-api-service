@@ -3,18 +3,18 @@ services:
         autowire: true
         autoconfigure: true
     
-    App\Serializer\SerializerInterface: '@App\Serializer\Strategy\Json\JsonSerializer'
+    App\Request\Serializer\SerializerInterface: '@App\Request\Serializer\Strategy\Json\JsonSerializer'
     
-    App\Serializer\Strategy\Json\JsonSerializer: ~
-    App\Serializer\Strategy\Json\JsonSerializerInterface: '@App\Serializer\Strategy\Json\JsonSerializer'
+    App\Request\Serializer\Strategy\Json\JsonSerializer: ~
+    App\Request\Serializer\Strategy\Json\JsonSerializerInterface: '@App\Request\Serializer\Strategy\Json\JsonSerializer'
     
-    App\Serializer\Callback\UrlCallback: ~
-    App\Serializer\Callback\DateCallback: ~
-    App\Serializer\Callback\DateTimeCallback: ~
+    App\Request\Serializer\Callback\UrlCallback: ~
+    App\Request\Serializer\Callback\DateCallback: ~
+    App\Request\Serializer\Callback\DateTimeCallback: ~
     
-    App\Serializer\Locator\CallbackLocator:
+    App\Request\Serializer\Locator\CallbackLocator:
         arguments:
             - !service_locator
-                App\Serializer\Callback\UrlCallback: '@App\Serializer\Callback\UrlCallback'
-                App\Serializer\Callback\DateCallback: '@App\Serializer\Callback\DateCallback'
-                App\Serializer\Callback\DateTimeCallback: '@App\Serializer\Callback\DateTimeCallback'
+                App\Request\Serializer\Callback\UrlCallback: '@App\Request\Serializer\Callback\UrlCallback'
+                App\Request\Serializer\Callback\DateCallback: '@App\Request\Serializer\Callback\DateCallback'
+                App\Request\Serializer\Callback\DateTimeCallback: '@App\Request\Serializer\Callback\DateTimeCallback'

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\EntityInterface;
+use App\Repository\Interface\EntityInterface;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

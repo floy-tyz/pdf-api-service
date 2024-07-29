@@ -3,10 +3,8 @@
 namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
-use App\Entity\File;
 use App\Service\Process\Map\ProcessMap;
 use App\Traits\ResponseStatusTrait;
-use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

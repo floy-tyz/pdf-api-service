@@ -5,8 +5,8 @@ namespace App\Controller\Api;
 use App\Bus\EventBusInterface;
 use App\Entity\File;
 use App\Entity\Process;
-use App\Exception\BusinessException;
-use App\Serializer\SerializerInterface;
+use App\Request\Exception\BusinessException;
+use App\Request\Serializer\SerializerInterface;
 use App\Service\File\Interface\FileRepositoryInterface;
 use App\Service\Process\Enum\ProcessStatusEnum;
 use App\Service\Process\Event\CreateNewProcessEvent;
@@ -16,10 +16,10 @@ use App\Traits\ResponseStatusTrait;
 use DateInterval;
 use DateTime;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use OpenApi\Attributes as OA;
 
 #[OA\Tag(name: 'Процесс')]
 class ProcessApiController extends AbstractController

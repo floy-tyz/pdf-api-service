@@ -3,7 +3,7 @@
 namespace App\Controller\Api;
 
 use App\Bus\EventBusInterface;
-use App\Serializer\SerializerInterface;
+use App\Request\Serializer\SerializerInterface;
 use App\Service\File\Interface\FileRepositoryInterface;
 use App\Service\User\Event\MakeUserEvent;
 use App\Service\User\Http\Dto\AuthUserRequestDto;
@@ -12,10 +12,10 @@ use App\Service\User\Http\Request\AuthUserRequest;
 use App\Service\User\Http\Request\RegisterUserRequest;
 use App\Traits\ResponseStatusTrait;
 use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use OpenApi\Attributes as OA;
 
 #[OA\Tag(name: 'Пользователь')]
 class UserApiController extends AbstractController

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\EntityInterface;
 use App\Repository\FileRepository;
-use App\Serializer\Attribute\Callback;
-use App\Serializer\Callback\UrlCallback;
+use App\Repository\Interface\EntityInterface;
+use App\Request\Serializer\Attribute\Callback;
+use App\Request\Serializer\Callback\UrlCallback;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Serializer\Attribute\Context;

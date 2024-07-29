@@ -3,7 +3,7 @@
 namespace App\Service\Process\Interface;
 
 use App\Entity\User;
-use App\Repository\RepositoryInterface;
+use App\Repository\Interface\RepositoryInterface;
 use DateInterval;
 use Symfony\Component\Security\Core\User\UserInterface;
 

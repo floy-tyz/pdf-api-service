@@ -2,7 +2,7 @@
 
 namespace App\Service\User\Http\Request;
 
-use App\Security\Request\AbstractRequestValidator;
+use App\Request\Http\AbstractRequestValidator;
 use App\Service\User\Http\Constraint\ConfirmPassword;
 use App\Service\User\Http\Dto\RegisterUserRequestDto;
 

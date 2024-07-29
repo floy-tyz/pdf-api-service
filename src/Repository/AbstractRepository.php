@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Repository\Interface\EntityInterface;
+use App\Repository\Interface\RepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;

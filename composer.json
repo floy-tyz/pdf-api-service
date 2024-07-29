@@ -44,7 +44,13 @@
         "webmozart/assert": "^1.11"
     },
     "require-dev": {
-        "symfony/maker-bundle": "^1.50"
+        "dama/doctrine-test-bundle": "^8.2",
+        "doctrine/doctrine-fixtures-bundle": "^3.6",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "7.1.*",
+        "symfony/css-selector": "7.1.*",
+        "symfony/maker-bundle": "^1.50",
+        "symfony/phpunit-bridge": "^7.1"
     },
     "config": {
         "allow-plugins": {

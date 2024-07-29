@@ -3,7 +3,7 @@
 namespace App\Service\File\Interface;
 
 use App\Entity\File;
-use App\Repository\RepositoryInterface;
+use App\Repository\Interface\RepositoryInterface;
 
 interface FileRepositoryInterface extends RepositoryInterface
 {

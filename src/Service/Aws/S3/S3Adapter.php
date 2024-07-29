@@ -2,7 +2,7 @@
 
 namespace App\Service\Aws\S3;
 
-use App\Exception\BusinessException;
+use App\Request\Exception\BusinessException;
 use Aws\Exception\AwsException;
 use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;

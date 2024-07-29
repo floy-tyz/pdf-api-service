@@ -1,0 +1,8 @@
+parameters:
+    http_host: '%env(string:HTTP_HOST)%'
+    test_user_login: '%env(string:TEST_USER_LOGIN)%'
+    test_user_password: '%env(string:TEST_USER_PASSWORD)%'
+
+services:
+    _defaults:
+        public: true

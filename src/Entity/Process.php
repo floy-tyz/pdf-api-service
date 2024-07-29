@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
+use App\Repository\Interface\EntityInterface;
 use App\Repository\ProcessRepository;
-use App\Repository\EntityInterface;
 use App\Service\Process\Enum\ProcessStatusEnum;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -40,7 +40,7 @@ class Process implements EntityInterface
     #[ORM\Column(type: "datetimetz", nullable: true)]
     protected ?DateTime $dateProcessed = null;
 
-    #[ORM\OneToMany(mappedBy: 'process', targetEntity: File::class, cascade: ["persist", "remove"])]
+    #[ORM\OneToMany(targetEntity: File::class, mappedBy: 'process', cascade: ["persist", "remove"])]
     private Collection $files;
 
     #[ORM\Column(type: "json")]

@@ -22,11 +22,11 @@ services:
     _defaults:
         autowire: true
     
-    App\Security\Response\NelmioExtension: ~
+    App\Request\Nelmio\NelmioExtension: ~
     
     nelmio_api_doc.describers.components:
         class: Nelmio\ApiDocBundle\Describer\ExternalDocDescriber
         tags:
             - { name: nelmio_api_doc.describer, priority: 10 }
         arguments:
-            $externalDoc: '@App\Security\Response\NelmioExtension'
+            $externalDoc: '@App\Request\Nelmio\NelmioExtension'
