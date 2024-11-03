@@ -2,8 +2,6 @@
 
 namespace App\Service\User\Http\Validator;
 
-use App\Service\Process\Http\Constraint\ValidProcessExtension;
-use App\Service\User\Http\Constraint\ConfirmPassword;
 use App\Service\User\Http\Constraint\UniqueUsername;
 use App\Service\User\Interface\UserRepositoryInterface;
 use Exception;

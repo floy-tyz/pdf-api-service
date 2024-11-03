@@ -23,8 +23,10 @@ class ProcessMap
             ],
             'extension' => FilesFormatMap::TYPE_PDF['extension'],
             'context' => [
-                ProcessContextMap::MERGE,
-                ProcessContextMap::OPTIMIZE,
+                'parameters' => [
+                    ProcessContextMap::MERGE,
+                    ProcessContextMap::OPTIMIZE,
+                ]
             ],
         ],
         self::OFFICE_TO_PDF => [
