@@ -84,8 +84,10 @@ export default {
                 return;
             }
 
-            if (!response.data?.success) {
-                alert(response.data?.message)
+            response = response.data;
+
+            if (!response?.success) {
+                alert(response?.message)
                 return;
             }
 

@@ -24,8 +24,10 @@ class ProcessMap
             'extension' => FilesFormatMap::TYPE_PDF['extension'],
             'context' => [
                 'parameters' => [
-                    ProcessContextMap::MERGE,
-                    ProcessContextMap::OPTIMIZE,
+                    ProcessContextParametersMap::MERGE => ProcessContextParametersMap::SUPPORTED_PARAMETERS[
+                        ProcessContextParametersMap::MERGE
+                    ],
+                    ProcessContextParametersMap::OPTIMIZE,
                 ]
             ],
         ],
@@ -44,7 +46,7 @@ class ProcessMap
             ],
             'extension' => FilesFormatMap::TYPE_PDF['extension'],
             'context' => [
-                ProcessContextMap::OPTIMIZE,
+                ProcessContextParametersMap::OPTIMIZE,
             ],
         ],
     ];
